@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Digital Card&nbsp;— Дарья Л.</title>
+  <meta name="description" content="Как мы запустили первую цифровую карту в m10: короткий выпуск за пару шагов, карта-персонаж с эмоциями и 51,8K карт за первые две недели.">
+  <link rel="canonical" href="https://lugovayadarya.ru/cases/digital-card/">
+  <link rel="alternate" hreflang="ru" href="https://lugovayadarya.ru/cases/digital-card/">
+  <link rel="alternate" hreflang="en" href="https://lugovayadarya.ru/en/cases/digital-card/">
+  <link rel="alternate" hreflang="x-default" href="https://lugovayadarya.ru/cases/digital-card/">
+  <meta name="theme-color" content="#f3f3f3">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:site_name" content="Дарья Л.">
+  <meta property="og:title" content="Digital Card — кейс Дарьи Л.">
+  <meta property="og:description" content="Как мы запустили первую цифровую карту в m10: короткий выпуск за пару шагов, карта-персонаж с эмоциями и 51,8K карт за первые две недели.">
+  <meta property="og:url" content="https://lugovayadarya.ru/cases/digital-card/">
+  <meta property="og:image" content="https://lugovayadarya.ru/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Дарья Л. — Product designer, 5+ years experience, B2C, fintech, crypto">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="../../media/fonts/suisse-intl-book.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../media/fonts/suisse-intl-medium.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../media/fonts/suisse-intl-bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../styles/tokens.css?v=r31">
+  <link rel="stylesheet" href="../../styles/base.css?v=r4">
+  <link rel="stylesheet" href="../../styles/components.css?v=r32">
+  <link rel="stylesheet" href="../../styles/case.css?v=r29">
+  <link rel="stylesheet" href="../../styles/page-transitions.css?v=r9">
+  <link rel="stylesheet" href="../../styles/link-roll.css?v=r4">
+  <!-- Переходы между страницами: первый кадр — когда заголовок уже разобран (его строки собирает page-transition.js) -->
+  <link rel="expect" href="#page-title" blocking="render">
+  <script src="../../scripts/page-transition.js?v=r9" blocking="render"></script>
+  <script src="../../scripts/link-roll.js?v=r4" defer></script>
+  <script src="../../scripts/reading-progress.js?v=r4" defer></script>
+  <script src="../../scripts/glass-backdrop.js?v=r4" defer></script>
+  <script src="../../scripts/lottie-kit.js?v=r4" defer></script>
+  <script src="../../scripts/app-flow.js?v=r14" defer></script>
+  <script src="../../scripts/card-face.js?v=r4" defer></script>
+  <script src="../../scripts/sheet-carousel.js?v=r4" defer></script>
+</head>
+<body>
+  <!-- Кейс Digital Card. Figma: Card case 75:18834 (1440) / Card case mobile (380).
+       Часть медиа — серые плейсхолдеры с пропорцией макета (картинок пока нет). -->
+
+  <!-- Контролы: «Назад» слева, прогресс прочтения справа. Десктоп — fixed; мобайл — едут со страницей и прилипают в 16 px от верха -->
+  <div class="case-controls">
+  <a class="case-back glass-button" data-glass-adapt href="../../" data-vt-back aria-label="Назад, на&nbsp;главную">
+    <img src="../../media/icons/chevron-left.svg" alt="" width="24" height="24">
+  </a>
+  <svg class="case-progress" data-glass-adapt viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="case-progress__track" cx="20" cy="20" r="16.5" />
+    <circle class="case-progress__arc" cx="20" cy="20" r="16.5" pathLength="100" />
+  </svg>
+  </div>
+
+  <header class="case-head">
+    <div class="case-meta grid t-caption">
+      <span class="case-meta__crumb">/</span>
+      <span class="case-meta__time">5&nbsp;mins</span>
+      <span class="case-meta__year">2026</span>
+    </div>
+  </header>
+
+  <main class="case-page grid page-end-space">
+    <article class="case-body">
+      <h1 class="case-title t-heading" id="page-title" data-reveal-lines>Запуск первой<br><span lang="en">Digital Card</span> в&nbsp;m10</h1>
+
+      <p class="case-intro">m10&nbsp;— азербайджанский e&#8209;wallet с&nbsp;700K&nbsp;MAU. В&nbsp;приложении можно переводить деньги, оплачивать услуги и&nbsp;покупки <span class="nowrap">по&nbsp;<img class="text-icon" src="../../media/text-icons/icon_qr.svg" alt="" width="18" height="18"> QR&#8209;коду.</span> Но&nbsp;возможности оплаты ограничены: воспользоваться кошельком без интернета или&nbsp;за&nbsp;границей не&nbsp;получится, в&nbsp;магазинах оплата работает только у&nbsp;партнёров, а&nbsp;покупки онлайн недоступны.</p>
+
+      <h2 class="case-h">Задача</h2>
+      <p>Спроектировать и&nbsp;запустить первую цифровую карту <span class="nowrap"><img class="text-icon" src="../../media/text-icons/icon_m10.svg" alt="" width="18" height="18"> m10,</span> чтобы снять эти ограничения и&nbsp;дать пользователям больше свободы в&nbsp;оплате.</p>
+      <!-- Медиа 1: мокап телефона, на карте — «живое» лицо (Lottie, scripts/card-face.js).
+           random ↔ stare-blink: случайная из пула (без повторов, пока не пройдут все) чередуется с морганием.
+           Пул (data-face-pool) — решение пользователя, список можно менять. Не в пуле: kiss-air (рывок на стыке), look-around,
+           sleep (вся спит), wake-up (начинается спящей). kiss-air кончается не в нейтральной позе — на стыке
+           со stare-blink лицо смещается вниз на ~3 px и меняются брови.
+           Телефон — по высоте рамки, лицо — на карте мокапа в % мокапа. Без JS — просто мокап. -->
+      <div class="case-media case-media--device" style="--media-h: 520" role="img" aria-label="Экран карты в&nbsp;приложении m10: на&nbsp;карте&nbsp;— живое лицо">
+        <div class="case-media__device">
+          <img src="../../media/optimized/card-case/card-cabinet-stroke-1x.webp"
+               srcset="../../media/optimized/card-case/card-cabinet-stroke-1x.webp 1x, ../../media/optimized/card-case/card-cabinet-stroke-2x.webp 2x"
+               width="320" height="673" alt="" decoding="async" fetchpriority="high">
+          <div class="card-face" aria-hidden="true"
+               data-card-face="random stare-blink"
+               data-face-pool="music money-eyes heart-eyes drinking kiss-pucker laugh-giggle laugh-big wink"
+               data-face-src="../../media/optimized/card-animations/"
+               data-face-rect="15.97 21.84 68.06 20.77"
+               data-face-radius="6.12% / 9.53%"></div>
+        </div>
+      </div>
+
+      <h2 class="case-h">Моя роль</h2>
+      <p>Я&nbsp;проектировала ключевые пользовательские сценарии&nbsp;— от&nbsp;получения карты до&nbsp;управления ей в&nbsp;приложении. Вместе с&nbsp;UX&#8209;исследователем тестировала первые решения, работала с&nbsp;креативной командой над&nbsp;визуальной концепцией и&nbsp;участвовала в&nbsp;подготовке запуска.</p>
+      <ul class="case-tags" aria-label="Теги">
+        <li class="label">UX/UI</li>
+        <li class="label">0&nbsp;→&nbsp;1</li>
+        <li class="label">UX Research</li>
+        <li class="label">Emotional design</li>
+      </ul>
+
+      <h2 class="case-h">01&nbsp;/ Проектирование и&nbsp;исследования</h2>
+      <p>На&nbsp;старте мы&nbsp;определили функциональность первой версии и&nbsp;требования к&nbsp;безопасности. Поскольку карта выпускалась только в&nbsp;цифровом формате и&nbsp;была привязана к&nbsp;существующему кошельку, нам не&nbsp;требовались отдельные анкеты, оформление доставки или&nbsp;посещение банка.</p>
+      <p>Это позволило свести выпуск к&nbsp;нескольким шагам, чтобы пользователь мог <span class="nowrap">быстро <img class="text-icon" src="../../media/text-icons/icon_lightning.svg" alt="" width="18" height="18"></span> получить карту и&nbsp;сразу начать ей пользоваться.</p>
+      <picture class="case-media">
+        <source media="(max-width: 479px)" srcset="../../media/optimized/card-case/mobile/issue-flow-steps-1x.webp 1x, ../../media/optimized/card-case/mobile/issue-flow-steps-2x.webp 2x" width="390" height="461">
+        <img src="../../media/optimized/card-case/issue-flow-steps-1x.webp" srcset="../../media/optimized/card-case/issue-flow-steps-1x.webp 1x, ../../media/optimized/card-case/issue-flow-steps-2x.webp 2x" width="680" height="200" alt="Схема выпуска карты: Активация → PIN → Готово, 2&nbsp;мин" loading="lazy" decoding="async">
+      </picture>
+
+      <p>Я&nbsp;изучила решения других финансовых <span class="nowrap">приложений <img class="text-icon" src="../../media/text-icons/icon_search.svg" alt="" width="18" height="18"></span> и&nbsp;собрала первый прототип активации и&nbsp;кабинета управления картой.</p>
+      <picture class="case-media">
+        <source media="(max-width: 479px)" srcset="../../media/optimized/card-case/mobile/prototype-flows-1x.webp 1x, ../../media/optimized/card-case/mobile/prototype-flows-2x.webp 2x" width="390" height="256">
+        <img src="../../media/optimized/card-case/prototype-flows-1x.webp" srcset="../../media/optimized/card-case/prototype-flows-1x.webp 1x, ../../media/optimized/card-case/prototype-flows-2x.webp 2x" width="680" height="336" alt="Прототип в&nbsp;Figma: сценарии от&nbsp;неактивной карты и&nbsp;добавления в&nbsp;кошелёк до&nbsp;управления картой" loading="lazy" decoding="async">
+      </picture>
+
+      <p>Вместе с&nbsp;UX&#8209;исследователем мы&nbsp;протестировали флоу на&nbsp;пользователях и&nbsp;обнаружили несколько проблем…</p>
+      <p>Люди не&nbsp;до&nbsp;конца понимали ценность цифровой карты: не&nbsp;знали, где ей можно <span class="nowrap">платить <img class="text-icon" src="../../media/text-icons/icon_question.svg" alt="" width="18" height="18"></span> и&nbsp;какие новые возможности она открывает. Также возникали вопросы о&nbsp;том, как работает общий баланс с&nbsp;кошельком и&nbsp;насколько <span class="nowrap">безопасно <img class="text-icon" src="../../media/text-icons/icon_shield.svg" alt="" width="18" height="18"></span> ей пользоваться.</p>
+      <picture class="case-media">
+        <source media="(max-width: 479px)" srcset="../../media/optimized/card-case/mobile/activation-user-reaction-1x.webp 1x, ../../media/optimized/card-case/mobile/activation-user-reaction-2x.webp 2x" width="390" height="382">
+        <img src="../../media/optimized/card-case/activation-user-reaction-1x.webp" srcset="../../media/optimized/card-case/activation-user-reaction-1x.webp 1x, ../../media/optimized/card-case/activation-user-reaction-2x.webp 2x" width="680" height="520" alt="Первый экран активации «Activate your free digital card» и&nbsp;реакция пользователя на&nbsp;тесте: «Можно, а&nbsp;зачем?»" loading="lazy" decoding="async">
+      </picture>
+
+      <p>По&nbsp;итогам тестирования мы&nbsp;вынесли основные преимущества на&nbsp;экран активации.</p>
+      <!-- Медиа 5: прототип активации карты (scripts/app-flow.js, стили — .app-flow в components.css, место — case.css).
+           Сценарий по кругу ≈ 18.6 с: спящая карта → нажатие «Wake up the card» → «The card is waking up…» (звёздочки)
+           → Create a PIN (набор) → Re-enter (набор) → Card activated! (карта просыпается и оглядывается) → телефон уезжает вниз, сверху въезжает тот же на первом экране.
+           Переходы — как в iOS (push с параллаксом, cross dissolve), без теней, тайминги — токены --motion-*-flow-* (tokens.css).
+           Экраны — SVG 390×844 (media/optimized/card-case/card-activation/), координаты живых частей — в pt экрана.
+           Без JS и в reduced motion — первый экран статично. Подробно — docs/images.md. -->
+      <div class="case-media case-media--flow" style="--media-h: 520; --media-h-mobile: 674.6" role="img" aria-label="Новый экран активации карты: спящая карта, нажатие «Wake up the card», создание PIN&#8209;кода и&nbsp;проснувшаяся карта">
+        <div class="app-flow" data-app-flow aria-hidden="true" data-flow-lottie-src="../../media/optimized/">
+          <div class="app-flow__phone">
+            <div class="app-flow__display">
+              <div class="app-flow__screen" data-flow-screen="wake-up">
+                <img class="app-flow__ui" src="../../media/optimized/card-case/card-activation/screen-wake-up.svg" width="390" height="844" alt="" loading="lazy" decoding="async">
+                <div class="app-flow__lottie" data-flow-lottie="card-animations/sleep" data-flow-start="appear" style="--x: 55; --y: 126; --w: 280; --h: 180; --r: 17"></div>
+                <div class="app-flow__press app-flow__press--light" data-flow-target="wake" style="--x: 20; --y: 721; --w: 350; --h: 56; --r: 28"></div>
+              </div>
+              <div class="app-flow__screen" data-flow-screen="waking-up" hidden>
+                <img class="app-flow__ui" src="../../media/optimized/card-case/card-activation/screen-waking-up.svg" width="390" height="844" alt="" loading="lazy" decoding="async">
+                <div class="app-flow__lottie" data-flow-lottie="card-case/card-activation/loader-stars" data-flow-start="appear" style="--x: 165; --y: 365; --w: 60; --h: 60"></div>
+              </div>
+              <div class="app-flow__screen" data-flow-screen="create-pin" hidden>
+                <img class="app-flow__ui" src="../../media/optimized/card-case/card-activation/screen-create-pin.svg" width="390" height="844" alt="" loading="lazy" decoding="async">
+                <div data-flow-keypad="59 431 100 88 72"></div>
+                <div data-flow-dots="create" data-flow-geom="153 281.5 28 8 4"></div>
+              </div>
+              <div class="app-flow__screen" data-flow-screen="reenter-pin" hidden>
+                <img class="app-flow__ui" src="../../media/optimized/card-case/card-activation/screen-reenter-pin.svg" width="390" height="844" alt="" loading="lazy" decoding="async">
+                <div data-flow-keypad="59 431 100 88 72"></div>
+                <div data-flow-dots="confirm" data-flow-geom="153 301.5 28 8 4"></div>
+              </div>
+              <div class="app-flow__screen" data-flow-screen="card-activated" hidden>
+                <img class="app-flow__ui" src="../../media/optimized/card-case/card-activation/screen-card-activated.svg" width="390" height="844" alt="" loading="lazy" decoding="async">
+                <div class="app-flow__lottie" data-flow-lottie="card-animations/wake-up card-animations/look-around" data-flow-start="shown" style="--x: 55; --y: 328.5; --w: 280; --h: 180; --r: 17"></div>
+              </div>
+              <div class="app-flow__chrome">
+                <img data-flow-chrome="status" src="../../media/optimized/card-case/card-activation/chrome.svg#status" width="390" height="54" alt="" loading="lazy" decoding="async" style="--x: 0; --y: 0; --w: 390; --h: 54">
+                <img data-flow-chrome="close" src="../../media/optimized/card-case/card-activation/chrome.svg#close" width="32" height="32" alt="" loading="lazy" decoding="async" style="--x: 338; --y: 66; --w: 32; --h: 32">
+                <img data-flow-chrome="back" src="../../media/optimized/card-case/card-activation/chrome.svg#back" width="24" height="20" alt="" loading="lazy" decoding="async" style="--x: 16; --y: 72; --w: 24; --h: 20" hidden>
+                <img data-flow-chrome="home" src="../../media/optimized/card-case/card-activation/chrome.svg#home" width="150" height="15" alt="" loading="lazy" decoding="async" style="--x: 120; --y: 826; --w: 150; --h: 15">
+              </div>
+            </div>
+          </div>
+          <script type="application/json" data-flow-script>
+            {
+              "start": "wake-up",
+              "chrome": { "status": true, "home": true, "close": true, "back": false },
+              "steps": [
+                { "wait": "--motion-flow-intro" },
+                { "tap": "wake" },
+                { "go": "waking-up", "via": "dissolve", "chrome": { "close": false } },
+                { "wait": "--motion-flow-loading" },
+                { "go": "create-pin", "via": "push", "chrome": { "back": true } },
+                { "wait": "--motion-flow-beat" },
+                { "type": "2580", "dots": "create" },
+                { "wait": "--motion-flow-confirm" },
+                { "go": "reenter-pin", "via": "push" },
+                { "wait": "--motion-flow-beat" },
+                { "type": "2580", "dots": "confirm" },
+                { "wait": "--motion-flow-confirm" },
+                { "go": "card-activated", "via": "push" },
+                { "wait": "--motion-flow-finale", "after": "lottie" },
+                { "swap": true }
+              ]
+            }
+          </script>
+        </div>
+      </div>
+
+      <p>И&nbsp;добавили отдельный in&#8209;app landing с&nbsp;подробной информацией о&nbsp;карте.<br>Так удалось сохранить короткий сценарий выпуска и&nbsp;дать больше информации тем, кому она нужна.</p>
+      <!-- MVP (2026-10-26): картинка Card security скрыта, не удалена — вернёмся позже -->
+      <picture class="case-media" hidden data-mvp-hidden>
+        <source media="(max-width: 479px)" srcset="../../media/optimized/card-case/mobile/card-security-screen-1x.webp 1x, ../../media/optimized/card-case/mobile/card-security-screen-2x.webp 2x" width="390" height="756">
+        <img src="../../media/optimized/card-case/card-security-screen-1x.webp" srcset="../../media/optimized/card-case/card-security-screen-1x.webp 1x, ../../media/optimized/card-case/card-security-screen-2x.webp 2x" width="680" height="520" alt="Экран Card security: защита Visa, SMS&#8209;подтверждение операций, PIN&#8209;код и&nbsp;блокировка карты в&nbsp;любой момент" loading="lazy" decoding="async">
+      </picture>
+
+      <!-- Медиа 7: карусель шторок «возможности карты» (scripts/sheet-carousel.js). Каждая шторка доигрывает
+           свою Lottie-иллюстрацию до конца, уезжает вправо, следующая въезжает слева; по кругу:
+           Shop online → Pay without internet → Shop abroad. Иллюстрация 280×280 в шторке 390×545 (pt):
+           x 55, y 40 → data-sheet-art в % шторки. Рамка до 479 px — 348×451 (мобильный эталон). Цвет квадрата (--sheet-art-bg) — как в JSON, виден до загрузки
+           плеера и без JS. Без JS и в reduced motion — первая шторка статично. -->
+      <div class="case-media case-media--sheets" style="--media-h: 520; --media-h-mobile: 451" role="img" aria-label="Шторки о&nbsp;возможностях карты: Shop online, Pay without internet, Shop abroad">
+        <div class="sheet-carousel" data-sheet-carousel
+             data-sheet-src="../../media/optimized/card-case/bottom-sheet/"
+             data-sheet-art="14.103 7.339 71.795 51.376">
+          <div class="sheet-carousel__slide" data-sheet-lottie="lottie-shop-online" style="--sheet-art-bg: #ffb45c">
+            <img src="../../media/optimized/card-case/bottom-sheet/sheet-shop-online-1x.webp"
+                 srcset="../../media/optimized/card-case/bottom-sheet/sheet-shop-online-1x.webp 1x, ../../media/optimized/card-case/bottom-sheet/sheet-shop-online-2x.webp 2x"
+                 width="280" height="391" alt="" loading="lazy" decoding="async">
+            <div class="sheet-carousel__art"></div>
+          </div>
+          <div class="sheet-carousel__slide" data-sheet-lottie="lottie-pay-offline" style="--sheet-art-bg: #c4a8f0" hidden>
+            <img src="../../media/optimized/card-case/bottom-sheet/sheet-pay-offline-1x.webp"
+                 srcset="../../media/optimized/card-case/bottom-sheet/sheet-pay-offline-1x.webp 1x, ../../media/optimized/card-case/bottom-sheet/sheet-pay-offline-2x.webp 2x"
+                 width="280" height="391" alt="" loading="lazy" decoding="async">
+            <div class="sheet-carousel__art"></div>
+          </div>
+          <div class="sheet-carousel__slide" data-sheet-lottie="lottie-shop-abroad" style="--sheet-art-bg: #74beff" hidden>
+            <img src="../../media/optimized/card-case/bottom-sheet/sheet-shop-abroad-1x.webp"
+                 srcset="../../media/optimized/card-case/bottom-sheet/sheet-shop-abroad-1x.webp 1x, ../../media/optimized/card-case/bottom-sheet/sheet-shop-abroad-2x.webp 2x"
+                 width="280" height="391" alt="" loading="lazy" decoding="async">
+            <div class="sheet-carousel__art"></div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="case-h">02&nbsp;/ Эмоциональный дизайн</h2>
+      <p>Параллельно с&nbsp;проектированием мы&nbsp;вместе с&nbsp;креативной командой искали визуальную концепцию карты. Хотелось добавить продукту индивидуальности и&nbsp;сделать взаимодействие с&nbsp;ним более <span class="nowrap"><img class="text-icon" src="../../media/text-icons/icon_heart.svg" alt="" width="18" height="18"> эмоциональным.</span> Так появилась карта&#8209;персонаж с&nbsp;собственным набором эмоций и&nbsp;анимаций.</p>
+      <p>Вместо привычного «Активировать карту» мы&nbsp;предложили её разбудить: до&nbsp;выпуска она <span class="nowrap">спит <img class="text-icon" src="../../media/text-icons/icon_moon.svg" alt="" width="18" height="18">,</span> в&nbsp;момент выпуска просыпается и&nbsp;периодически меняет выражения в&nbsp;кабинете.</p>
+      <!-- Медиа «Эмоции карты»: картинка (схема «Animation save zone» + пустые карты) и Lottie-лица на картах
+           (scripts/card-face.js). Правая нижняя карта всё время чередует flag ↔ look-around (стыки бесшовные:
+           нейтральные кадры равны попиксельно); правая верхняя (money-eyes, кадр 48) и левая нижняя (music, кадр 76)
+           стоят на выразительных кадрах — один отрисованный кадр, без rAF (data-face-play="hold"). До 479 px —
+           мобильная картинка и одна карта с тем же чередованием. Reduced motion: flag на кадре 56, остальные — на своих.
+           Решение пользователя (вариант 2 из previews/emotions-block). Карты — в % картинки (= рамки),
+           композиция 281×180 на всю карту. Без JS — просто картинка. -->
+      <div class="case-media case-media--faces" style="--media-h: 503; --media-h-mobile: 451" role="img" aria-label="Эмоции карты&#8209;персонажа: зона безопасной анимации и&nbsp;карты с&nbsp;живыми лицами">
+        <picture>
+          <source media="(max-width: 479px)" srcset="../../media/optimized/card-case/mobile/emotions-grid-1x.webp 1x, ../../media/optimized/card-case/mobile/emotions-grid-2x.webp 2x" width="390" height="505">
+          <img src="../../media/optimized/card-case/emotions-grid-1x.webp" srcset="../../media/optimized/card-case/emotions-grid-1x.webp 1x, ../../media/optimized/card-case/emotions-grid-2x.webp 2x" width="680" height="503" alt="" loading="lazy" decoding="async">
+        </picture>
+        <div class="card-face card-face--desktop" aria-hidden="true" data-card-face="money-eyes" data-face-play="hold" data-face-hold="48"
+             data-face-src="../../media/optimized/card-animations/"
+             data-face-rect="52.119 15.905 35.969 31.256" data-face-radius="6.34% / 9.86%"></div>
+        <div class="card-face card-face--desktop" aria-hidden="true" data-card-face="music" data-face-play="hold" data-face-hold="76"
+             data-face-src="../../media/optimized/card-animations/"
+             data-face-rect="11.912 52.734 36.098 31.355" data-face-radius="6.34% / 9.86%"></div>
+        <div class="card-face card-face--desktop" aria-hidden="true" data-card-face="flag look-around" data-face-play="loop" data-face-hold="flag:56"
+             data-face-src="../../media/optimized/card-animations/"
+             data-face-rect="52.119 52.783 35.969 31.250" data-face-radius="6.34% / 9.86%"></div>
+        <div class="card-face card-face--mobile" aria-hidden="true" data-card-face="flag look-around" data-face-play="loop" data-face-hold="flag:56"
+             data-face-src="../../media/optimized/card-animations/"
+             data-face-rect="14.943 52.550 70.285 34.860" data-face-radius="6.34% / 9.86%"></div>
+      </div>
+
+      <h2 class="case-h">03&nbsp;/ Интеграция и&nbsp;запуск</h2>
+      <p>Мы разместили карту на&nbsp;главном экране рядом с&nbsp;кошельком, чтобы пользователи быстрее замечали новую функцию и&nbsp;видели связь с&nbsp;общим <span class="nowrap"><img class="text-icon" src="../../media/text-icons/icon_azn.svg" alt="" width="18" height="18"> балансом.</span></p>
+      <p>Отдельно продумали нестандартную анимацию перехода в&nbsp;кабинет, чтобы сделать взаимодействие с&nbsp;картой интереснее.</p>
+      <!-- Слои «карта» и «шторка» — растр 2x/3x (отрисован из SVG в браузере): SVG в движущемся слое Safari на iPhone растрирует мыльно.
+      Медиа: открытие кабинета карты (scripts/app-flow.js, стили — .app-flow--cabinet в components.css, место — case.css).
+           Круг ≈ 9.25 с: главный экран → нажатие на карту → шторка контента уезжает вниз, карта синхронно переезжает
+           на место в кабинете, шапка «My QR» растворяется в баланс и крестик; на карте сразу играет эмоция (random из пула
+           ↔ stare-blink, как в медиа 1) → через 5 с нажатие на крестик → шторка и карта синхронно возвращаются,
+           лицо в покое → главный экран. Место в рамке — как у медиа 1 (и на мобайле: телефон крупно, низ обрезан).
+           Переходы — без теней и затемнений, только transform/opacity, тайминги — токены --motion-*-flow-sheet-*,
+           --motion-*-flow-cabinet-* (tokens.css). Слои — SVG из Figma
+           (media/optimized/card-case/card-cabinet-open/), координаты — в pt телефона 306×644.
+           Без JS — главный экран статично; reduced motion — открытый кабинет, нейтральное лицо. Подробно — docs/images.md. -->
+      <div class="case-media case-media--cabinet" style="--media-h: 520" role="img" aria-label="Открытие кабинета карты: нажатие на&nbsp;карту на&nbsp;главном экране, шторка с&nbsp;балансом уезжает вниз, карта с&nbsp;живым лицом&nbsp;— в&nbsp;кабинете">
+        <div class="app-flow app-flow--cabinet" data-app-flow aria-hidden="true" data-flow-lottie-src="../../media/optimized/">
+          <div class="app-flow__phone">
+            <div class="app-flow__display">
+              <div class="app-flow__screen" data-flow-screen="home">
+                <img class="app-flow__ui" src="../../media/optimized/card-case/card-cabinet-open/screen-home.svg" width="306" height="644" alt="" loading="lazy" decoding="async">
+              </div>
+              <div class="app-flow__screen" data-flow-screen="cabinet" hidden>
+                <img class="app-flow__ui" src="../../media/optimized/card-case/card-cabinet-open/screen-cabinet.svg" width="306" height="644" alt="" loading="lazy" decoding="async">
+                <div class="app-flow__press" data-flow-target="close" style="--x: 262.33; --y: 57; --w: 24; --h: 24; --r: 12"></div>
+              </div>
+              <div class="app-flow__stage">
+                <div class="app-flow__layer" data-flow-layer="card" data-flow-pose-cabinet="translateY(20.82%) scale(0.934)" style="--x: 9.5; --y: 88.8; --w: 287; --h: 208; --origin: 50% 9.2%">
+                  <img src="../../media/optimized/card-case/card-cabinet-open/card-2x.webp" srcset="../../media/optimized/card-case/card-cabinet-open/card-2x.webp 2x, ../../media/optimized/card-case/card-cabinet-open/card-3x.webp 3x" width="287" height="208" alt="" loading="lazy" decoding="async">
+                  <div class="card-face" data-face-gate
+                       data-card-face="random stare-blink"
+                       data-face-pool="music money-eyes heart-eyes drinking kiss-pucker laugh-giggle laugh-big wink"
+                       data-face-src="../../media/optimized/card-animations/"
+                       data-face-rect="11.11 9.2 77.78 68.99"
+                       data-face-radius="6.07% / 9.44%"></div>
+                  <div class="app-flow__press" data-flow-target="card" style="--x: 31.89; --y: 19.13; --w: 223.22; --h: 143.5; --r: 13.55"></div>
+                </div>
+                <div class="app-flow__layer" data-flow-layer="sheet" data-flow-pose-cabinet="translateY(105%)" style="--x: 8; --y: 143; --w: 290; --h: 505">
+                  <img src="../../media/optimized/card-case/card-cabinet-open/home-content-sheet-2x.webp" srcset="../../media/optimized/card-case/card-cabinet-open/home-content-sheet-2x.webp 2x, ../../media/optimized/card-case/card-cabinet-open/home-content-sheet-3x.webp 3x" width="290" height="505" alt="" loading="lazy" decoding="async">
+                </div>
+              </div>
+              <div class="app-flow__chrome">
+                <img class="app-flow__status" data-flow-chrome="status" src="../../media/optimized/card-case/card-cabinet-open/screen-home.svg" width="306" height="644" alt="" loading="lazy" decoding="async" style="--x: 0; --y: 0; --w: 306; --h: 644">
+                <img data-flow-chrome="home" src="../../media/optimized/card-case/card-cabinet-open/home-indicator.svg" width="290" height="16" alt="" loading="lazy" decoding="async" style="--x: 8; --y: 620.1; --w: 290; --h: 16">
+              </div>
+            </div>
+          </div>
+          <script type="application/json" data-flow-script>
+            {
+              "start": "home",
+              "reduced": "cabinet",
+              "chrome": { "status": true, "home": true },
+              "steps": [
+                { "wait": "--motion-flow-cabinet-intro" },
+                { "tap": "card" },
+                { "face": "on" },
+                { "go": "cabinet", "via": "sheet", "timing": {
+                  "screen": ["--motion-duration-flow-cabinet-fade", "--motion-ease-flow-dissolve"],
+                  "sheet": ["--motion-duration-flow-sheet-open", "--motion-ease-flow-sheet-open"],
+                  "card": ["--motion-duration-flow-sheet-open", "--motion-ease-flow-sheet-open"] } },
+                { "wait": "--motion-flow-cabinet-hold" },
+                { "tap": "close" },
+                { "go": "home", "via": "sheet", "timing": {
+                  "screen": ["--motion-duration-flow-cabinet-fade", "--motion-ease-flow-dissolve"],
+                  "sheet": ["--motion-duration-flow-sheet-close", "--motion-ease-flow-sheet-close"],
+                  "card": ["--motion-duration-flow-sheet-close", "--motion-ease-flow-sheet-close"] } },
+                { "face": "off" },
+                { "wait": "--motion-flow-cabinet-rest" }
+              ]
+            }
+          </script>
+        </div>
+      </div>
+
+      <p>Чтобы познакомить аудиторию с&nbsp;новым продуктом, вместе с&nbsp;маркетингом мы&nbsp;подготовили коммуникации для&nbsp;разных сегментов пользователей.</p>
+      <p>Также я&nbsp;собрала лендинг <span class="nowrap">на&nbsp;Webflow <img class="text-icon" src="../../media/text-icons/icon_webflow.svg" alt="" width="18" height="18">,</span> где можно было подробнее узнать о&nbsp;карте и&nbsp;её возможностях.</p>
+      <picture class="case-media">
+        <source media="(max-width: 479px)" srcset="../../media/optimized/card-case/mobile/webflow-landing-1x.webp 1x, ../../media/optimized/card-case/mobile/webflow-landing-2x.webp 2x" width="390" height="382">
+        <img src="../../media/optimized/card-case/webflow-landing-1x.webp" srcset="../../media/optimized/card-case/webflow-landing-1x.webp 1x, ../../media/optimized/card-case/webflow-landing-2x.webp 2x" width="680" height="482" alt="Лендинг Digital m10card на&nbsp;Webflow: «Digital m10card is&nbsp;ready!» и&nbsp;кнопка Get your card" loading="lazy" decoding="async">
+      </picture>
+
+      <h2 class="case-h">Результаты</h2>
+      <p>За&nbsp;первые две недели после запуска:</p>
+      <ul class="case-list">
+        <li>51,8K выпущенных карт</li>
+        <li>500K+ транзакций</li>
+        <li>$3,4M+ оборота</li>
+      </ul>
+      <p>Цель в&nbsp;50&nbsp;тысяч карт за&nbsp;месяц <span class="nowrap">закрыли <img class="text-icon" src="../../media/text-icons/icon_check.svg" alt="" width="18" height="18"></span> менее чем за&nbsp;две недели.</p>
+      <p>А&nbsp;это мы&nbsp;с&nbsp;командой радуемся первым <span class="nowrap">результатам <img class="text-icon" src="../../media/text-icons/icon_heart.svg" alt="" width="18" height="18">.</span></p>
+      <picture class="case-media">
+        <source media="(max-width: 479px)" srcset="../../media/optimized/card-case/mobile/team-call-1x.webp 1x, ../../media/optimized/card-case/mobile/team-call-2x.webp 2x" width="390" height="244">
+        <img src="../../media/optimized/card-case/team-call-1x.webp" srcset="../../media/optimized/card-case/team-call-1x.webp 1x, ../../media/optimized/card-case/team-call-2x.webp 2x" width="680" height="425" alt="Команда на&nbsp;видеозвонке после запуска" loading="lazy" decoding="async">
+      </picture>
+
+      <!-- MVP (2026-10-26): блок «И ещё кое-что» (заморозка карты) скрыт, не удалён — кейс заканчивается фото команды. Вернёмся позже. -->
+      <div hidden data-mvp-hidden>
+      <h2 class="case-h">И&nbsp;ещё кое&#8209;что</h2>
+      <p>В&nbsp;ходе исследования выяснилось, что пользователи воспринимают <span class="nowrap"><img class="text-icon" src="../../media/text-icons/icon_block.svg" alt="" width="18" height="18"> блокировку</span> карты как необратимое действие и&nbsp;боятся потерять доступ к&nbsp;деньгам.</p>
+      <p>Я&nbsp;предложила пересмотреть сам подход: вместо блокировки использовать <span class="nowrap">заморозку <img class="text-icon" src="../../media/text-icons/icon_froze.svg" alt="" width="18" height="18">&nbsp;—</span> временное состояние, из&nbsp;которого карту можно вернуть в&nbsp;любой момент.</p>
+      <p>В&nbsp;первый MVP решение не&nbsp;вошло, поэтому мы&nbsp;вернулись к&nbsp;нему после запуска: переработали тексты и&nbsp;подготовили отдельную анимацию. Концепцию поддержали на&nbsp;уровне экосистемы Bir и&nbsp;планируют использовать в&nbsp;других продуктах.</p>
+      <div class="case-media" style="--media-h: 420" role="img" aria-label="Замороженная карта"></div>
+      </div>
+
+    </article>
+  </main>
+
+  <!-- Нижнее меню сайта (fixed). Figma: Card case 75:18834. CV пока без ссылки. -->
+  <!-- MVP (2026-10-26): Playground, CV-текстом, пилюля Telegram с иконкой и кнопка «Ещё» скрыты атрибутом hidden (data-mvp-hidden), не удалены — вернёмся к ним позже. Меню на всех ширинах: «Кейсы · Telegram» + пилюля CV с иконкой «скачать». -->
+  <nav class="site-menu" aria-label="Меню сайта">
+    <ul class="site-menu__group glass-button" data-glass-adapt>
+      <li><a class="site-menu__item" href="../../#cases">Кейсы</a></li>
+      <li class="site-menu__desktop" hidden data-mvp-hidden><a class="site-menu__item">Playground</a></li>
+      <li class="site-menu__desktop" hidden data-mvp-hidden><a class="site-menu__item" href="../../media/cv/darya-lugovaya-cv-ru.pdf" target="_blank" rel="noopener noreferrer">CV</a></li>
+      <li><a class="site-menu__item" href="https://t.me/lugovayadarya" target="_blank" rel="noopener noreferrer">Telegram</a></li>
+    </ul>
+    <a hidden data-mvp-hidden class="site-menu__group site-menu__group--pill site-menu__item site-menu__desktop glass-button" data-glass-adapt href="https://t.me/lugovayadarya" target="_blank" rel="noopener noreferrer">
+      <img src="../../media/icons/24_icon_telegram_stroke.svg" alt="" width="20" height="20">Telegram
+    </a>
+    <a class="site-menu__group site-menu__group--pill site-menu__item site-menu__cv-pill glass-button" data-glass-adapt href="../../media/cv/darya-lugovaya-cv-ru.pdf" target="_blank" rel="noopener noreferrer">
+      <img src="../../media/icons/20_icon_download_stroke.svg" alt="" width="20" height="20">CV
+    </a>
+    <button hidden data-mvp-hidden class="site-menu__more site-menu__mobile glass-button" data-glass-adapt type="button" aria-label="Ещё">
+      <img src="../../media/icons/24_hamburger_icon.svg" alt="" width="24" height="24">
+    </button>
+  </nav>
+</body>
+</html>

@@ -1,0 +1,437 @@
+/*
+ * Portfolio — design tokens
+ * Источник: Figma «Portfolio» (n8e026kD6GuKXwNnFL4WqZ), страница design.
+ * figma: ...  — токен уже заведён в Figma (имя переменной / стиля)
+ * new         — создан по результатам аудита, в Figma пока нет
+ *
+ * Прозрачность — не отдельный токен: базовый токен + альфа на месте,
+ * например color-mix(in srgb, var(--color-text-secondary) 50%, transparent).
+ */
+
+/* Suisse Intl — woff2 из docs/font (OTF, лицензия пользователя), подмножество: латиница, кириллица,
+   пунктуация, стрелки, валюты (конвертация fontTools, 2026-10-26). Сначала установленный в системе шрифт. */
+@font-face { font-family: "Suisse Intl"; font-weight: 400; font-display: swap; src: local("Suisse Intl Book"), local("SuisseIntl-Book"), url("../media/fonts/suisse-intl-book.woff2") format("woff2"); }
+@font-face { font-family: "Suisse Intl"; font-weight: 500; font-display: swap; src: local("Suisse Intl Medium"), local("SuisseIntl-Medium"), url("../media/fonts/suisse-intl-medium.woff2") format("woff2"); }
+@font-face { font-family: "Suisse Intl"; font-weight: 700; font-display: swap; src: local("Suisse Intl Bold"), local("SuisseIntl-Bold"), url("../media/fonts/suisse-intl-bold.woff2") format("woff2"); }
+
+:root {
+  /* ── Glass (CSS-приближение Figma Glass) ───────
+   * Сверено по docs/reference (4x): заливка белый 34% (на фоне ≈ #F6F6F6),
+   * по внешнему краю тонкий белый ободок 1px, без теней.
+   */
+  --glass-fill: color-mix(in srgb, white 34%, transparent);
+  --glass-blur: blur(15px) saturate(1.4);
+  --glass-edge: inset 0 0 0 1px white;
+  /* new: стекло кнопок и меню (кнопка «Назад», нижнее меню). Сверено по docs/reference:
+     сверху затемнение ≈ Text/Primary 5 % (235 на фоне 243), к низу уходит в фон,
+     по верхнему краю белый 1px, снизу мягкий белый блик. */
+  --glass-button-shade: linear-gradient(to bottom, color-mix(in srgb, var(--color-text-primary) 5%, transparent), transparent 70%);
+  --glass-button-edge: inset 0 1px 0 white, inset 0 -3px 4px -1px white;
+  /* Тёмный вариант (new): когда под кнопкой тёмное — тёмная карточка, инверсия фона.
+     Сверено по docs/reference/Nav_menu.png (4x) на #171717: сверху затемнение до ≈#0F0F0F
+     и тонкая линия ≈#222, к середине — фон, снизу мягкий подъём до ≈#272727 и линия ≈#3F3F3F.
+     Переключает scripts/glass-backdrop.js (data-backdrop="dark"). */
+  --glass-button-shade-dark: linear-gradient(to bottom,
+    rgb(0 0 0 / 0.35) 0%, rgb(0 0 0 / 0.25) 25%, transparent 60%,
+    rgb(255 255 255 / 0.03) 80%, rgb(255 255 255 / 0.07) 100%);
+  --glass-button-edge-dark: inset 0 1px 0 rgb(255 255 255 / 0.08), inset 0 -1px 0 rgb(255 255 255 / 0.11);
+  --motion-duration-backdrop: 400ms;      /* new: плавная смена стекла и цвета текста кнопок светлый ↔ тёмный */
+  --motion-ease-backdrop: cubic-bezier(0.4, 0, 0.2, 1); /* new */
+
+  /* ── Color: text ─────────────────────────────── */
+  --color-text-primary: #4a4a4a;          /* figma: Text/Primary */
+  --color-text-secondary: #9f9f9f;        /* figma: Text/Secondary */
+  --color-text-secondary-dark: #7c7c7c;   /* figma: Text/Secondary Dark */
+  --color-icon-primary: #4a4a4a;          /* figma: Icon/Primary */
+  --color-accent: #fb7100;                /* figma: Color/Orange */
+  --color-text-on-inverse: #bebebe;       /* new: заголовки на тёмных блоках */
+
+  /* ── Color: surfaces ─────────────────────────── */
+  --color-bg-page: #f3f3f3;               /* new: фон страницы */
+  --color-bg-card: #e5e5e5;               /* new: светлая карточка кейса */
+  --color-bg-card-inverse: #171717;       /* new: тёмная карточка кейса, «Ground» */
+
+  /* ── Typography ──────────────────────────────── */
+  --font-family: "Suisse Intl", "Helvetica Neue", Arial, sans-serif;
+
+  --text-heading-size: 32px;              /* figma: Text/32 Bold */
+  --text-heading-weight: 700;
+  --text-heading-tracking: -0.03em;
+  --text-heading-line: 37px;              /* new: Figma Auto для Suisse Intl при 32; целые px, чтобы блоки ниже не вставали на полпикселя */
+
+  --text-body-size: 16px;                 /* figma: Text/16 Book, Text/16 Bold */
+  --text-body-line: 1.6;
+  --text-body-bold-weight: 700;           /* figma: Text/16 Bold */
+
+  --text-body-medium-weight: 500;         /* new: Text/16 Medium — пункты нижнего меню (толщина штриха по эталону) */
+
+  --text-caption-size: 14px;              /* figma: Text/14Meduim */
+  --text-caption-weight: 500;
+  --text-caption-line: 1.5;
+
+  /* ── Radius ──────────────────────────────────── */
+  --radius-m: 12px;                       /* new */
+  --radius-card: 18px;                    /* new */
+  --radius-full: 999px;                   /* new: лейблы, кнопки-пилюли */
+
+  /* ── Spacing ─────────────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-2-5: 10px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-menu-bottom: 24px;              /* new: нижнее меню от низа окна (fixed); с safe-area берётся большее, не сумма */
+  --focus-ring-width: 2px;                /* new: рамка фокуса с клавиатуры (карточка-ссылка) */
+  --focus-ring-offset: 4px;               /* new */
+  --locked-badge-offset-x: 12px;          /* new: плашка «locked» — справа от замочка: край замочка +10, зазор 2 px */
+  --locked-badge-offset-y: -13px;         /* new: плашка по центру замочка по вертикали (половина её высоты 26) */
+  --locked-veil-blur: 18px;               /* new: тап по закрытому кейсу (тач) — сила размытия карточки */
+  --locked-veil-tint: 40%;                /* new: затемнение поверх размытия (Card Inverse) — темнее эталона, чтобы читался белый текст (решение пользователя) */
+  --motion-duration-locked-in: 300ms;     /* new: размытие и «Оформляю» появляются */
+  --motion-locked-hold: 1200ms;           /* new: сколько висит «Оформляю» (было 2200 — долго, решение пользователя) */
+  --motion-duration-locked-out: 400ms;    /* new: превью плавно возвращается */
+  --locked-content-fade: 0.25;            /* new: содержимое карточки под «Оформляю» гаснет — без белого ореола от размытой светлой картинки */
+  --motion-duration-locked-shake: 420ms;  /* new: клик мышью по закрытому кейсу — плашка «трясётся», как ошибка */
+  --locked-shake-distance: 6px;           /* new: амплитуда тряски, затухает к нулю */
+  --space-text-icon: 2px;                 /* new: доп. отступ иконки в тексте к пробелу с каждой стороны */
+
+  /* Вертикальные отступы секций (new). Значения из макета, на мобайле переопределены. */
+  --space-hero-intro: 62px;               /* нав → имя/аватар */
+  --space-section: 100px;                 /* hero → первая карточка кейса */
+  --space-viewport-y: 24px;               /* new: поля сверху/снизу экрана — карточка кейса влезает в окно: 24 / 20 / 16 */
+  --size-case-min-height: 360px;          /* new: ниже карточку не сжимаем (низкие окна, телефон в ландшафте) */
+  --space-cases-gap: 52px;                /* new: зазор между карточками кейсов */
+  --space-card-padding: 28px;             /* new: внутренний отступ карточки кейса */
+
+  /* ── Size ────────────────────────────────────── */
+  --size-card-logo: 49px;                 /* new: логотип в карточке кейса */
+  --size-label: 36px;                     /* new: высота лейбла-пилюли (теги кейса) */
+  --size-control: 44px;                   /* new: кнопка «Назад», высота пилюль меню, круглая кнопка меню */
+  --size-progress: 40px;                  /* new: круговой индикатор прочтения */
+  --size-progress-stroke: 3px;            /* new: толщина трека и дуги индикатора */
+  --size-icon: 24px;                      /* new: иконки интерфейса (шеврон, точки меню) */
+  --size-icon-s: 20px;                    /* new: иконка Telegram в меню */
+  --size-text-icon: 18px;                 /* new: цветные иконки внутри текста кейса */
+
+  /* ── Article: страница кейса / статьи ─────────
+   * Вся раскладка и вертикальный ритм статьи — здесь: правишь значение,
+   * меняются все кейсы. Значения: десктоп / планшет 768–1279 / мобайл < 768
+   * (переопределения — в медиазапросах ниже). Схема — design-system/index.html.
+   */
+  --article-line: 26px;                   /* межстрочный текста статьи (шаг по эталону) */
+  --article-meta-top: 8px;                /* верх окна → мета-строка «/ · 5 mins · 2026»   8 / 8 / 16 */
+  --article-top: 70px;                    /* мета-строка → заголовок                       70 / 70 / 90 */
+  --article-title-gap: 40px;              /* заголовок → вступление                        40 / 40 / 33 */
+  --article-paragraph: 28px;              /* между абзацами; абзац → подзаголовок, лейблы, список */
+  --article-heading-gap: 20px;            /* подзаголовок → его первый абзац */
+  --article-media-gap: 48px;              /* медиа ↔ текст и медиа ↔ медиа                 48 / 48 / 28 (мобайл = обычный абзацный отступ, своего у медиа нет) */
+  --article-tags-gap-y: 8px;              /* лейблы-пилюли: между рядами */
+  --article-tags-gap-x: 6px;              /* лейблы-пилюли: между пилюлями */
+  --article-list-indent: 24px;            /* отступ текста в списке, точка — по центру отступа */
+  --article-controls-top: 18px;           /* fixed «Назад» и прогресс от верха окна        18 / 18 / 56 */
+  /* Колонки текста — номера колонок сетки */
+  --article-col-start: 4;                 /* первая колонка текста                         4 / 3 / 1 */
+  --article-col-title: 5;                 /* заголовок, красная строка, время в мета       5 / 4 / 3 */
+  --article-col-last: 9;                  /* последняя колонка текста                      9 / 10 / 6 */
+  --article-indent-cols: 1;               /* красная строка — во сколько колонок           1 / 1 / 2 */
+
+  /* ── Grid ──────────────────────────────────────
+   * figma: layout grid «Main page» — 12 col, stretch, margin 48, gutter 16.
+   * Масштабирование: поля и гаттеры фиксированы, колонки тянутся (1fr),
+   * max-width нет — на 1920 сетка просто шире. Шрифты НЕ масштабируются.
+   */
+  --grid-columns: 12;
+  --grid-margin: 48px;
+  --grid-gutter: 16px;
+}
+
+/* ── Motion (new) ──────────────────────────────
+ * Заведены для блока Playground (превью previews/playground/).
+ * Кривые и длительности читаются и из CSS, и из JS (скраб по скроллу, пружина).
+ */
+:root {
+  --motion-pin-top: 48px;                         /* new: на каком расстоянии от верха окна «Ground» фиксируется (sticky) */
+  --motion-scroll-playground: 640px;              /* new: длина проскролла, пока Playground закреплён и играет анимация */
+  --motion-ease-stretch: cubic-bezier(0.3, 0.6, 0.45, 1);  /* new: «резинка» тянется — легко в начале, туже к пику */
+  --motion-duration-spring: 420ms;                /* new: пружина отскока после точки отпускания, время до затухания */
+  --motion-spring-bounce: 0.12;                   /* new: глубина первого отскока пружины, доля от пика растяжения (Frame 4) */
+  /* Инверсия фона перед Playground — скраб по скроллу. Границы — где центр слова «Ground»
+   * относительно высоты окна (1 = низ, 0 = верх): начало, когда блок въехал в нижнюю треть,
+   * конец — слово в центре окна (Animations/Play ground/Transition.png). */
+  --motion-invert-start: 0.85;                    /* new: центр слова на 85 % высоты окна — фон начинает темнеть */
+  --motion-invert-end: 0.5;                       /* new: центр слова в центре окна — инверсия завершена */
+  --motion-ease-invert: cubic-bezier(0.45, 0, 0.55, 1);    /* new: плавный вход и выход смены фона */
+  --motion-scroll-smoothing: 140ms;               /* new: сглаживание величин, завязанных на скролл (посадка, растяжение «o»,
+                                                     инверсия): постоянная критически демпфированного следования; 0 — без */
+  --motion-pin-soft-zone: 160px;                  /* new: мягкое прилипание/отлипание — за сколько px проскролла до точки
+                                                     закрепления блок начинает тормозить (и после отпускания — разгоняться) */
+  --motion-ease-pin: cubic-bezier(0.5, 0, 0.75, 0.75);     /* new: торможение к 48 px: скорость 0 в точке закрепления, 1 (= скорость
+                                                     скролла) на краю зоны. Для непрерывной скорости y1 = 0 и y2 = x2 */
+  /* «o» как жвачка: доли, деформация растёт с растяжением (на пике Frame 3 — полная) */
+  --motion-goo-waist: 0.2;                        /* new: «талия» — насколько сужается середина растянутой буквы */
+  --motion-goo-bend: 0.05;                        /* new: изгиб стенок внутрь (доля полуширины буквы) */
+  --motion-goo-sag: 0.08;                         /* new: верх проседает за низом — доля растяжения */
+  --motion-goo-asym: 0.5;                         /* new: асимметрия «жвачки» (0 — зеркально): талия ниже и глубже слева,
+                                                     правая стенка гнётся позже, низ уходит вбок, масса «покачивается» */
+  --motion-goo-spread: 0.04;                      /* new: на отскоке (Frame 4) буква раздаётся вширь — доля ширины */
+  --motion-invert-ink-span: 0.08;                 /* new: доля окна инверсии вокруг его середины, за которую «Ground» меняет цвет.
+                                                     Фон и слово идут навстречу между близкими цветами — при одновременной смене
+                                                     слово на середине сливается с фоном, поэтому слово перекрашивается быстро */
+}
+
+@media (max-width: 767px) {
+  :root {
+    --motion-scroll-playground: 400px;            /* new: на мобайле проскролл короче */
+    --motion-pin-soft-zone: 96px;                 /* new: на мобайле зона мягкого прилипания короче */
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  :root {
+    --space-viewport-y: 20px;
+    --article-col-start: 3;
+    --article-col-title: 4;
+    --article-col-last: 10;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --text-heading-size: 28px;            /* figma: Mobille/28 Bold */
+    --text-heading-line: 32px;
+    --space-viewport-y: 16px;
+    --space-hero-intro: 64px;   /* docs/reference/Main page mobile.png (обновлён 2026-10-26): низ нава → аватар */
+    --space-section: 64px;      /* docs/reference/Main page mobile.png (обновлён 2026-10-26): подзаголовок → первая карточка */
+    --space-cases-gap: 36px;
+    --space-card-padding: 24px;
+    --size-card-logo: 40px;
+    --article-meta-top: 16px;
+    --article-top: 90px;
+    --article-title-gap: 33px;
+    --article-controls-top: 56px;
+    --article-controls-stick: 16px;   /* new: мобайл — при скролле «Назад» и прогресс прилипают на этой высоте (решение пользователя) */
+    --article-media-gap: 28px;
+    --article-col-start: 1;
+    --article-col-title: 3;
+    --article-col-last: 6;
+    --article-indent-cols: 2;
+    /* figma: layout grid «Main page mobile» — 6 col, stretch, margin 16, gutter 12 */
+    --grid-columns: 6;
+    --grid-margin: 16px;
+    --grid-gutter: 12px;
+  }
+}
+
+/* Базовая сетка: дети ставятся по колоночным линиям (grid-column). */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  column-gap: var(--grid-gutter);
+  padding-inline: var(--grid-margin);
+}
+
+/* ── Motion: плакат из мятой бумаги (new) ──────
+ * Playground v3 — previews/playground-sandbox/v3-paper/ (WebGL, читается из JS).
+ * Референс — Animations/playground-paper/ (раскрытие комка ≈ 0.67 с при 15 fps).
+ */
+:root {
+  --motion-duration-paper-unfold: 700ms;          /* new: комок → плоский лист (вариант A, по времени) */
+  --motion-ease-paper-unfold: cubic-bezier(0.2, 0.75, 0.25, 1);  /* new: комок «взрывается» быстро, лист долго и мягко выпрямляется */
+  --motion-duration-paper-crumple: 450ms;         /* new: обратное смятие при уходе плаката вниз за кадр (обратный скролл) */
+  --motion-ease-paper-crumple: cubic-bezier(0.55, 0, 0.45, 1);   /* new: смятие — разгон и мягкая посадка в комок */
+  --motion-paper-trigger: 0.4;                    /* new: вариант A — доля видимой площади плаката, при которой он раскрывается */
+  --motion-paper-reset: 0.15;                     /* new: вариант A — при обратном скролле ниже этой доли плакат сминается обратно */
+  --motion-paper-scrub-start: 1;                  /* new: вариант B — центр плаката на 100 % высоты окна: ещё комок */
+  --motion-paper-scrub-end: 0.6;                  /* new: вариант B — центр плаката на 60 % высоты окна: лист плоский */
+}
+
+@media (max-width: 767px) {
+  :root {
+    --motion-duration-paper-unfold: 600ms;        /* new: на мобайле короче */
+  }
+}
+
+/* ── Motion: карусель шторок (new) ─────────────
+ * Кейс Digital Card, шторки «возможности карты» — scripts/sheet-carousel.js (читается из JS).
+ * Шторка доигрывает Lottie, держит последний кадр, уезжает вправо; следующая въезжает слева
+ * тем же движением (сцепкой), анимация новой стартует, когда она встала на место.
+ */
+:root {
+  --motion-duration-sheet-slide: 800ms;           /* new: смена шторки — путь ≈ 480 px на 1440 (полрамки + полшторки) */
+  --motion-ease-sheet-slide: cubic-bezier(0.65, 0, 0.25, 1);    /* new: плавный разгон и длинная мягкая посадка — новая встаёт без рывка */
+  --motion-duration-sheet-hold: 400ms;            /* new: пауза на последнем кадре Lottie перед уходом шторки */
+}
+
+@media (max-width: 767px) {
+  :root {
+    --motion-duration-sheet-slide: 640ms;         /* new: на мобайле путь короче (≈ 315 px на 380) — и смена короче */
+  }
+}
+
+/* ── Motion: прототип приложения (new) ─────────
+ * Кейс Digital Card, сценарий активации карты в мокапе телефона — scripts/app-flow.js (читается из JS,
+ * сценарий шагов — JSON в разметке). Переходы — по паттернам iOS: push (новый экран въезжает справа,
+ * прежний уходит влево с параллаксом), cross dissolve (модальный показ без сдвига), нажатия — подсветка
+ * на касание и мягкое затухание после отпускания. Смещения — в % ширины экрана телефона (масштабируются
+ * вместе с мокапом), а не во vw. Смена телефона в конце круга — вертикальный слайд, сдвиг задаёт место
+ * в кейсе (--flow-swap-shift, case.css).
+ */
+:root {
+  --motion-duration-flow-push: 500ms;             /* new: push навигации iOS (UINavigationController ≈ 0.5 с) */
+  --motion-ease-flow-push: cubic-bezier(0.32, 0.72, 0, 1);      /* new: критически задемпфированная пружина iOS (без перелёта) */
+  --motion-flow-push-parallax: -30%;              /* new: на сколько ширины экрана уходит прежний экран при push (параллакс iOS) */
+  --motion-duration-flow-dissolve: 350ms;         /* new: cross dissolve — модальный показ экрана загрузки */
+  --motion-ease-flow-dissolve: cubic-bezier(0.42, 0, 0.58, 1);  /* new: ease-in-out UIKit */
+  --motion-duration-flow-swap: 900ms;             /* new: смена телефона в конце круга — уходит вниз, тот же на первом экране въезжает сверху (сцепкой) */
+  --motion-ease-flow-swap: cubic-bezier(0.65, 0, 0.25, 1);      /* new: плавный разгон и длинная мягкая посадка, как у карусели шторок */
+  --motion-duration-flow-press-in: 100ms;         /* new: подсветка кнопки/клавиши на касание */
+  --motion-ease-flow-press-in: cubic-bezier(0, 0, 0.58, 1);     /* new: ease-out — подсветка сразу, без разгона */
+  --motion-duration-flow-touch: 150ms;            /* new: палец на экране: касание → отпускание (действие — на отпускании) */
+  --motion-duration-flow-press-out: 250ms;        /* new: подсветка гаснет после отпускания */
+  --motion-ease-flow-press-out: cubic-bezier(0.25, 0.1, 0.25, 1);  /* new: ease — мягкое затухание */
+  --motion-duration-flow-dot: 100ms;              /* new: точка PIN заполняется на касание клавиши */
+  /* Паузы сценария (что видит зритель между действиями) */
+  --motion-flow-intro: 2000ms;                    /* new: первый экран — успеть прочитать заголовок и увидеть спящую карту */
+  --motion-flow-loading: 1800ms;                  /* new: «The card is waking up…» — ≈ 1.4 круга звёздочек (1.28 с) */
+  --motion-flow-beat: 400ms;                      /* new: экран встал — пауза перед первым нажатием */
+  --motion-flow-key-interval: 340ms;              /* new: между нажатиями клавиш PIN (≈ 3 нажатия в секунду, спокойный набор) */
+  --motion-flow-confirm: 350ms;                   /* new: после последней цифры — до перехода на следующий экран */
+  --motion-flow-finale: 5000ms;                   /* new: «Card activated!» — сколько экран висит ПОСЛЕ того, как карта проснулась (конец wake-up ≈ 3.02 с), look-around идёт; потом смена телефона */
+}
+
+/* Мобайл: телефон в рамке того же размера (по высоте рамки 520), путь push тот же — тайминги без изменений. */
+
+/* ── Motion: открытие кабинета карты (new) ─────────
+ * Кейс Digital Card, раздел 03 — scripts/app-flow.js, переход "via": "sheet": шторка контента главного экрана
+ * уезжает вниз и открывает карту, карта переезжает на место в кабинете, шапка ↔ баланс с крестиком растворяются;
+ * закрытие — обратно. Логика — по референсу docs/reference/card-cabinet-open/reference-cash-app-logic.mov:
+ * открытие — шторка уезжает за край, закрытие — возвращается снизу. По отзыву пользователя — мягко: плавный старт
+ * и длинная посадка без перелёта; шторка и карта — одной кривой и одной длительностью (одно связное движение,
+ * карта не обгоняет шторку), смена шапки — в ту же длительность укладывается в первую половину.
+ * Без теней и затемнений, только transform/opacity. Смещения — в % слоёв телефона (масштабируются с мокапом).
+ */
+:root {
+  --motion-duration-flow-sheet-open: 750ms;       /* new: открытие — шторка уезжает за край экрана (≈ 530 pt), карта переезжает на место в кабинете (≈ 44 pt вниз, −7 %) */
+  --motion-ease-flow-sheet-open: cubic-bezier(0.45, 0, 0.1, 1); /* new: плавный старт без рывка, пик скорости ≈ на трети, длинная мягкая посадка без перелёта (как у пружины с сильным демпфированием) */
+  --motion-duration-flow-sheet-close: 700ms;      /* new: закрытие — шторка возвращается снизу, карта синхронно поднимается на место */
+  --motion-ease-flow-sheet-close: cubic-bezier(0.45, 0, 0.1, 1); /* new: та же мягкая кривая, что у открытия */
+  --motion-duration-flow-cabinet-fade: 400ms;     /* new: шапка «My QR» ↔ баланс и крестик кабинета — в первой половине движения (cross dissolve, кривая — --motion-ease-flow-dissolve) */
+  /* Паузы сценария */
+  --motion-flow-cabinet-intro: 1800ms;            /* new: главный экран до нажатия на карту */
+  --motion-flow-cabinet-hold: 5000ms;             /* new: кабинет открыт — карта показывает эмоцию (≈ 3.7 с) и начинает моргать; потом нажатие на крестик */
+  --motion-flow-cabinet-rest: 600ms;              /* new: главный экран после закрытия — до конца круга (дальше снова intro, стык бесшовный) */
+}
+
+/* ── Motion: живой скролл сайта в окне браузера (new) ──
+ * Главная, обложка m10 Web Redesign — scripts/browser-scroll.js (читается из JS, сценарий жестов — JSON
+ * в разметке). Скролл как у человека с трекпадом: короткий разгон пальцем и длинное инерционное затухание,
+ * жесты разной длины, паузы на блоках, перелёт и поправка назад, «резинка» у низа страницы, в конце —
+ * быстрый возврат наверх (как тап по статус-бару) и снова первый экран: круг бесшовный.
+ * Сдвиги — в координатах страницы сайта (1440 px макета сайта), масштабируются вместе с окном. Только ≥ 768.
+ */
+:root {
+  --motion-ease-scroll-flick: cubic-bezier(0.2, 0.3, 0.1, 1);   /* new: жест трекпада — пик скорости на ≈ 12 % времени, дальше инерция затухает */
+  --motion-duration-scroll-flick-short: 1000ms;    /* new: короткий подкручивающий жест (≈ 300 px сайта), неторопливо */
+  --motion-duration-scroll-flick: 1400ms;         /* new: обычный жест (≈ 500–650 px сайта), долгое инерционное затухание */
+  --motion-duration-scroll-flick-long: 1700ms;    /* new: длинный жест с перелётом (≈ 650 px и больше) */
+  --motion-ease-scroll-correct: cubic-bezier(0.45, 0, 0.25, 1); /* new: поправка назад пальцем, без инерции: мягкий разгон и посадка */
+  --motion-duration-scroll-correct: 800ms;        /* new: перелетел — спокойно вернулся на ≈ 80 px к заголовку блока */
+  --motion-ease-scroll-bounce: cubic-bezier(0.32, 0.72, 0, 1);  /* new: «резинка» у края страницы отпускается — пружина iOS без перелёта */
+  --motion-duration-scroll-bounce: 600ms;         /* new: возврат «резинки» к низу страницы */
+  --motion-ease-scroll-to-top: cubic-bezier(0.2, 0, 0, 1);      /* new: быстрый возврат наверх — резкий старт, длинная мягкая посадка (ease-out) */
+  --motion-duration-scroll-to-top: 1000ms;        /* new: возврат наверх через всю страницу (≈ 2450 px сайта) */
+  /* Паузы сценария */
+  --motion-duration-scroll-hold-top: 3000ms;      /* new: первый экран сайта — и в начале, и после возврата (точка стыка круга); успеть рассмотреть hero */
+  --motion-duration-scroll-glance: 1200ms;         /* new: короткий взгляд между жестами (карточки преимуществ) */
+  --motion-duration-scroll-regrip: 400ms;         /* new: палец переставлен — следующий жест */
+  --motion-duration-scroll-read: 3200ms;          /* new: остановка на интересном блоке («How to pay», справочник) — успеть прочитать */
+  --motion-duration-scroll-hold-end: 2800ms;      /* new: низ страницы — футер с QR, перед быстрым возвратом наверх */
+}
+
+/* ── Motion: «прокрутка букв» на ссылках (new) ──
+ * scripts/link-roll.js (читает токены из JS). Замерено по docs/reference/links.mov (кадры 60 fps,
+ * «Music»: наведение 5.63–6.12 с, уход 6.35–6.60 с; совпадает с transitions.mov):
+ *  наведение — буквы по очереди слева направо уезжают вверх, снизу въезжает копия; путь буквы ≈ 400 мс:
+ *  медленный старт (за 30 % времени — 12 % пути), пик скорости на ≈ 40 %, долгая посадка;
+ *  сдвиг между буквами ≈ 17 мс; копия едет на ≈ 35 % и проявляется с ≈ 60 % пути до конца; слово ≈ 0.47 с;
+ *  уход курсора — слово целиком (без сдвига по буквам) прокручивается обратно вниз, ≈ 250 мс, копия непрозрачная.
+ */
+:root {
+  --motion-duration-roll: 400ms;                  /* new: путь одной буквы вверх при наведении (замер ≈ 400 мс) */
+  --motion-stagger-roll: 17ms;                    /* new: задержка между соседними буквами (замер 16–18 мс); суммарно не больше 200 ms */
+  --motion-ease-roll: cubic-bezier(0.75, 0.1, 0.1, 0.85);       /* new: подогнана по кадрам links.mov: медленный старт, пик ≈ 40 %, долгая посадка */
+  --motion-roll-ghost: 0.35;                      /* new: непрозрачность въезжающей копии, пока она едет (серый ≈ #a6a6a6 на белом) */
+  --motion-roll-ghost-hold: 0.6;                  /* new: до какой доли пути копия полупрозрачная; дальше проявляется до 100 % к концу пути */
+  --motion-ease-roll-fade: cubic-bezier(0.3, 0.15, 0.25, 0.9);  /* new: проявление копии (подогнано по кадрам) */
+  --motion-duration-roll-out: 250ms;              /* new: уход курсора — слово целиком прокручивается обратно вниз (замер ≈ 250 мс) */
+  --motion-ease-roll-out: cubic-bezier(0.65, 0.15, 0, 0.9);     /* new: обратный ход: мягкий старт, быстрая середина, посадка (подогнано по кадрам) */
+}
+
+/* ── Motion: переходы между страницами (new) ──
+ * Cross-document View Transitions, scripts/page-transition.js. Сверено по docs/reference/transitions.mov (4.65–5.5 с):
+ * старая страница уменьшается и темнеет (за ней — тёмный фон), отклоняется и уходит влево; новая въезжает справа снизу
+ * с наклоном и мягко встаёт; затем заголовок новой страницы проявляется построчно снизу (маска).
+ * Вся хореография — доли одной длительности --motion-duration-page (решение пользователя 2026-10-26: 1 с).
+ */
+:root {
+  --motion-duration-page: 1000ms;                 /* new: весь переход — от клика до последней строки заголовка (в видео ≈ 0.95 с) */
+  --motion-ease-page-shrink: cubic-bezier(0.25, 0.6, 0.3, 1);   /* new: старая страница «отходит» — уменьшение и затемнение */
+  --motion-ease-page-away: cubic-bezier(0.5, 0, 0.75, 0.6);     /* new: старая уходит — разгон, без торможения (её накрывает новая) */
+  --motion-ease-page-in: cubic-bezier(0.16, 1, 0.3, 1);         /* new: новая въезжает — резкий старт, длинная мягкая посадка (expo-out, как в видео) */
+  --motion-ease-reveal: cubic-bezier(0.2, 0.2, 0, 1);           /* new: строка заголовка поднимается из-под маски — замер docs/reference/text.mov: мягкий старт, пик скорости ≈ 70 мс, длинная посадка */
+  --motion-page-scale: 0.88;                      /* new: насколько уменьшается старая страница (видео ≈ 0.86–0.88) */
+  --motion-page-dim: 0.8;                         /* new: непрозрачность старой страницы над тёмным фоном — «темнеет» до ≈ #c8c8c8 */
+  --motion-page-tilt: 3deg;                       /* new: наклон въезжающей страницы (у уходящей — меньше и в обратную сторону) */
+  --motion-page-tilt-back: 8deg;                  /* new: лёгкий 3D-наклон уходящей страницы «назад» (rotateY с перспективой) */
+  --motion-stagger-lines: 65ms;                   /* new: задержка между строками заголовка (text.mov ≈ 65 мс) */
+  --motion-duration-card-rise: 1200ms;            /* new: карточка кейса выезжает при открытии главной */
+  --motion-ease-card-rise: cubic-bezier(0.3, 0.1, 0.1, 1);     /* new: выезд карточки — плавный разгон и долгая мягкая посадка */
+
+  /* Изгиб карточек кейсов при скролле (scripts/scroll-bend.js). docs/reference/scroll effrct.mov,
+     решение пользователя (previews/card-scroll-bend): все карточки на одной дуге высотой в экран, 12 px. */
+  --motion-bend-max: 12px;                        /* new: прогиб боковых краёв посередине экрана на полной скорости */
+  --motion-bend-velocity: 2200;                   /* new: px/с — скорость скролла, при которой прогиб максимальный */
+  --motion-bend-tau-in: 60ms;                     /* new: как быстро края выгибаются при старте скролла */
+  --motion-bend-tau-out: 160ms;                   /* new: как плавно выпрямляются после остановки (≈ 0.6 с) */
+
+  /* Playground — перекати-поле (styles/playground.css, scripts/tumbleweed.js). Референсы docs/reference/main pg.png,
+     main pg-1.png; отработано в previews/playground-sandbox/v4-tumbleweed. */
+  --pg-title-top: 64px;             /* new: верх блока → верх «Plày» */
+  --tumble-width: 100vw;            /* new: ширина видео — по экрану */
+  --tumble-y: 68%;                  /* new: центр шара — на этой доле высоты блока (ближе к низу, решение пользователя) */
+  --tumble-center: 51.5%;           /* new: центр шара по высоте кадра видео (покадровый замер: 0.26–0.77) */
+  --tumble-blend: lighten;          /* new: чёрный фон видео на тёмном фоне сайта — берётся светлое из двух */
+  --tumble-fade: 500ms;             /* new: десктоп — шар плавно гаснет в конце прохода и проявляется в начале */
+  --tumble-rest: 3000ms;            /* new: десктоп — пауза между проходами шара (решение пользователя) */
+  --tumble-empty-blur: 12px;        /* new: тап по шару на мобайле — размытие под «Пока пусто» (main pg empty.png) */
+
+  /* Поп-ап аватара с плеером (styles/avatar-popup.css, scripts/avatar-popup.js). Референсы
+     docs/reference/avatar open.png, open avatar mobile.png (4x). */
+  --avatar-pop-size: 256px;
+  --avatar-pop-gap: 48px;                 /* крестик → фото */
+  --avatar-pop-blur: 40px;
+  --avatar-pop-tint: 70%;                 /* доля --color-bg-card-inverse поверх размытия */
+  --motion-duration-avatar-open: 700ms;
+  --motion-duration-avatar-close: 450ms;
+  --motion-ease-avatar: cubic-bezier(0.3, 0.1, 0.1, 1);   /* мягкий разгон, долгая посадка (как выезд карточки) */
+  --motion-duration-avatar-dot: 450ms;
+  --player-height: 64px;
+  --player-width: 192px;
+  --player-cover: 48px;
+  --player-gap: 32px;                     /* фото → плеер */
+}
+
+@media (max-width: 767px) {
+  :root {
+    --motion-page-tilt: 2deg;                     /* new: на мобайле наклон спокойнее */
+    --motion-page-tilt-back: 4deg;                /* new */
+    --motion-page-scale: 0.92;                    /* new: на узком экране уменьшение меньше */
+    --motion-bend-max: 8px;                       /* new: поля 16 px — прогиб меньше поля */
+    --avatar-pop-size: 200px;                     /* new: фото в поп-апе аватара на мобайле (референс 380) */
+    --pg-title-top: 88px;           /* new: Playground на мобайле (main pg-1.png) */
+    --pg-cards-gap: 64px;           /* new: мобайл — низ последней карточки → верх «Plày» (решение пользователя) */
+    --tumble-width: 200vw;          /* new: видео вдвое шире экрана — шар ≈ 152 px на 380, как в макете */
+    --space-menu-bottom: 12px;                    /* new: на мобайле меню ниже (решение пользователя 2026-10-26: 16 → 12) */
+  }
+}

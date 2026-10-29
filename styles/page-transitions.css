@@ -1,0 +1,175 @@
+/*
+ * Переходы между страницами — cross-document View Transitions (скрипт — scripts/page-transition.js).
+ * Сверено по docs/reference/transitions.mov (4.65–5.5 с). Вся хореография — доли --motion-duration-page (D):
+ *   0–14 % D    старая страница уменьшается и темнеет (за ней — тёмный фон --color-bg-card-inverse);
+ *   14–60 % D   старая отклоняется (лёгкий 3D-наклон) и уходит влево, разгоняясь;
+ *   14–60 % D   новая въезжает справа снизу с наклоном и мягко встаёт (expo-out), накрывая старую;
+ *   60 % D      переход заканчивается (сам View Transition длится 0.6 D — без «пустого» хвоста);
+ *   60–100 % D  заголовок новой страницы проявляется построчно снизу — уже на живой странице, не внутри
+ *               снимка перехода (иначе на телефоне браузер перерисовывает снимок каждый кадр — лаги).
+ * Проценты в @keyframes ниже — от длительности перехода 0.6 D: 23.33 % = 14 % D, 100 % = 60 % D.
+ * Назад («Назад», браузерное «назад») — зеркально: старая уходит вправо, новая въезжает слева снизу.
+ * Нижнее меню, «Назад» и прогресс — отдельные слои: меню стоит на месте (как навигация в видео),
+ * «Назад» и прогресс проявляются, когда новая страница встала.
+ * Firefox и старые браузеры — обычная навигация. prefers-reduced-motion — без перехода.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+}
+
+/* Фон за уходящей страницей — решение пользователя */
+::view-transition { background: var(--color-bg-card-inverse); }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: calc(var(--motion-duration-page) * 0.6);
+  animation-fill-mode: both;
+  animation-timing-function: linear;   /* кривые — по участкам, внутри @keyframes */
+  mix-blend-mode: normal;              /* у UA по умолчанию plus-lighter для кроссфейда */
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+}
+::view-transition-old(root) { animation-name: pt-old; }
+::view-transition-new(root) { animation-name: pt-new; }
+html:active-view-transition-type(back)::view-transition-old(root) { animation-name: pt-old-back; }
+html:active-view-transition-type(back)::view-transition-new(root) { animation-name: pt-new-back; }
+
+/* Один и тот же список функций во всех кадрах — интерполяция по каждой функции, без матриц */
+@keyframes pt-old {
+  0% {
+    transform: perspective(1600px) translate(0, 0) rotateY(0deg) rotate(0deg) scale(1);
+    opacity: 1;
+    animation-timing-function: var(--motion-ease-page-shrink);
+  }
+  23.33% {
+    transform: perspective(1600px) translate(0, 0) rotateY(0deg) rotate(0deg) scale(var(--motion-page-scale));
+    opacity: var(--motion-page-dim);
+    animation-timing-function: var(--motion-ease-page-away);
+  }
+  99.9% {
+    transform: perspective(1600px) translate(-48%, 4%) rotateY(var(--motion-page-tilt-back)) rotate(calc(var(--motion-page-tilt) * -0.6)) scale(calc(var(--motion-page-scale) - 0.03));
+    opacity: calc(var(--motion-page-dim) - 0.25);
+  }
+  100% {
+    transform: perspective(1600px) translate(-48%, 4%) rotateY(var(--motion-page-tilt-back)) rotate(calc(var(--motion-page-tilt) * -0.6)) scale(calc(var(--motion-page-scale) - 0.03));
+    opacity: 0;
+  }
+}
+
+@keyframes pt-new {
+  0%, 23.33% {
+    transform: translate(100%, 55%) rotate(var(--motion-page-tilt));
+    animation-timing-function: var(--motion-ease-page-in);
+  }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes pt-old-back {
+  0% {
+    transform: perspective(1600px) translate(0, 0) rotateY(0deg) rotate(0deg) scale(1);
+    opacity: 1;
+    animation-timing-function: var(--motion-ease-page-shrink);
+  }
+  23.33% {
+    transform: perspective(1600px) translate(0, 0) rotateY(0deg) rotate(0deg) scale(var(--motion-page-scale));
+    opacity: var(--motion-page-dim);
+    animation-timing-function: var(--motion-ease-page-away);
+  }
+  99.9% {
+    transform: perspective(1600px) translate(48%, 4%) rotateY(calc(var(--motion-page-tilt-back) * -1)) rotate(calc(var(--motion-page-tilt) * 0.6)) scale(calc(var(--motion-page-scale) - 0.03));
+    opacity: calc(var(--motion-page-dim) - 0.25);
+  }
+  100% {
+    transform: perspective(1600px) translate(48%, 4%) rotateY(calc(var(--motion-page-tilt-back) * -1)) rotate(calc(var(--motion-page-tilt) * 0.6)) scale(calc(var(--motion-page-scale) - 0.03));
+    opacity: 0;
+  }
+}
+
+@keyframes pt-new-back {
+  0%, 23.33% {
+    transform: translate(-100%, 55%) rotate(calc(var(--motion-page-tilt) * -1));
+    animation-timing-function: var(--motion-ease-page-in);
+  }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+/* ── Фиксированные слои ── */
+/* Каждая стеклянная кнопка — свой слой: тогда её стекло (backdrop-filter) переносится на группу
+   и размывает то, что под ней во время перехода, а не «запекается» в снапшот страницы.
+   Скругление группе задаём явно: без него размытие рисуется прямоугольником (тот самый «блюрный квадрат»). */
+/* Скрытые пункты (hidden, MVP) имён не получают */
+.site-menu__group:not(.site-menu__group--pill):not([hidden]) { view-transition-name: menu-main; }
+.site-menu__group--pill:not([hidden]) { view-transition-name: menu-pill; }
+.site-menu__more:not([hidden]) { view-transition-name: menu-more; }
+.case-back { view-transition-name: case-back; }
+.case-progress { view-transition-name: case-progress; }
+
+/* Скругление и обрезка — на группе и на всех слоях внутри. Группа несёт стекло кнопки (backdrop-filter):
+   без скругления и clip-path размытие рисуется прямоугольником — острые углы и «блюрный квадрат». */
+::view-transition-group(menu-main),
+::view-transition-group(menu-pill),
+::view-transition-group(menu-more),
+::view-transition-group(case-back) { overflow: clip; }
+::view-transition-group(menu-main) {
+  border-radius: var(--radius-m);
+  clip-path: inset(0 round var(--radius-m));
+}
+::view-transition-group(menu-pill),
+::view-transition-group(menu-more),
+::view-transition-group(case-back) {
+  border-radius: var(--radius-full);
+  clip-path: inset(0 round var(--radius-full));
+}
+::view-transition-image-pair(menu-main), ::view-transition-old(menu-main), ::view-transition-new(menu-main),
+::view-transition-image-pair(menu-pill), ::view-transition-old(menu-pill), ::view-transition-new(menu-pill),
+::view-transition-image-pair(menu-more), ::view-transition-old(menu-more), ::view-transition-new(menu-more),
+::view-transition-image-pair(case-back), ::view-transition-old(case-back), ::view-transition-new(case-back) {
+  border-radius: inherit;
+  overflow: clip;
+}
+
+/* Меню одинаковое на обеих страницах — стоит на месте (как навигация в видео). Без кроссфейда:
+   старая картинка скрыта, новая — живая и всегда непрозрачная (кроссфейд с plus-lighter и прозрачность
+   группы портили стекло: бледные подписи, «недорисованная» заливка). Стекло — backdrop-filter группы. */
+::view-transition-group(menu-main),
+::view-transition-group(menu-pill),
+::view-transition-group(menu-more) { animation: none; }
+::view-transition-old(menu-main),
+::view-transition-old(menu-pill),
+::view-transition-old(menu-more) { display: none; }
+::view-transition-new(menu-main),
+::view-transition-new(menu-pill),
+::view-transition-new(menu-more) { animation: none; }
+
+/* Цвет стекла и подписей на время перехода заморожен (html[data-pt-freeze], page-transition.js):
+   новая страница получает состояние светлое/тёмное, какое было в момент клика, без анимации смены;
+   после перехода glass-backdrop.js пересчитывает и меняет плавно, как обычно. */
+html[data-pt-freeze] .glass-button,
+html[data-pt-freeze] .glass-button::before,
+html[data-pt-freeze] .glass-button::after,
+html[data-pt-freeze] .glass-button img,
+html[data-pt-freeze] .case-progress,
+html[data-pt-freeze] .case-progress * { transition: none !important; }
+
+/* «Назад» и прогресс есть только у кейса. Во время перехода их слоёв не показываем вовсе
+   (прозрачность группы со стеклом рисуется неверно), после перехода живая кнопка проявляется
+   (page-transition.js), при уходе с кейса — гаснет вместе с затемнением страницы. */
+html:active-view-transition-type(controls-in)::view-transition-group(case-back),
+html:active-view-transition-type(controls-in)::view-transition-group(case-progress),
+html:active-view-transition-type(controls-out)::view-transition-group(case-back),
+html:active-view-transition-type(controls-out)::view-transition-group(case-progress) { display: none; }
+
+
+/* ── Построчное появление заголовка (строки собирает page-transition.js, на время анимации) ── */
+.reveal-line {
+  display: block;
+  /* запас снизу под свисающие буквы (g, y): маска по низу строки + 0.2em */
+  padding-bottom: 0.2em;
+  margin-bottom: -0.2em;
+  /* маска — overflow, а не clip-path: обрезку по прямоугольнику телефон делает на видеокарте,
+     clip-path в Safari перерисовывается каждый кадр. Запас по бокам — под свесы букв. */
+  overflow: hidden;
+  padding-inline: 0.1em;
+  margin-inline: -0.1em;
+}
+.reveal-line__inner { display: block; will-change: transform; }

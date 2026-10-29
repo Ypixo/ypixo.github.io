@@ -1,0 +1,567 @@
+/*
+ * Portfolio — общие компоненты: лейбл-пилюля, стеклянная кнопка,
+ * иконка в тексте, нижнее меню сайта.
+ */
+
+/* ── Лейбл-пилюля (теги кейса) ──
+ * Обводка Text/Secondary 50 %, текст Text/Secondary Dark, 14 Medium. */
+.label {
+  display: flex;
+  align-items: center;
+  height: var(--size-label);
+  padding-inline: var(--space-3);
+  border: 1px solid color-mix(in srgb, var(--color-text-secondary) 50%, transparent);
+  border-radius: var(--radius-full);
+  color: var(--color-text-secondary-dark);
+  font-size: var(--text-caption-size);
+  font-weight: var(--text-caption-weight);
+  line-height: var(--text-caption-line);
+  white-space: nowrap;
+}
+
+/* ── Стекло кнопок и меню (CSS-приближение Figma Glass, см. tokens.css) ── */
+/* Светлое и тёмное стекло — два слоя (::before / ::after), между ними плавно
+   меняется прозрачность: градиенты сами по себе не анимируются. Вместе со стеклом
+   плавно меняются кромка, цвет текста и яркость иконок. */
+.glass-button {
+  position: relative;               /* у .case-back переопределено на fixed — тоже ок */
+  isolation: isolate;
+  background: transparent;          /* у <button> иначе вылезает серый фон браузера */
+  border: 0;                        /* у <button> иначе рамка браузера — на круглой кнопке видна как дуга */
+  padding: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-button-edge);
+  color: var(--color-text-primary);
+  transition:
+    color var(--motion-duration-backdrop) var(--motion-ease-backdrop),
+    box-shadow var(--motion-duration-backdrop) var(--motion-ease-backdrop);
+}
+
+.glass-button::before,
+.glass-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  transition: opacity var(--motion-duration-backdrop) var(--motion-ease-backdrop);
+}
+.glass-button::before { background: var(--glass-button-shade); }
+.glass-button::after { background: var(--glass-button-shade-dark); opacity: 0; }
+
+.glass-button img {
+  transition: filter var(--motion-duration-backdrop) var(--motion-ease-backdrop);
+}
+
+/* Под кнопкой тёмное (тёмная карточка, инверсия фона) — тёмный вариант стекла
+   и светлый текст. Атрибут ставит scripts/glass-backdrop.js. */
+[data-backdrop="dark"] .glass-button,
+.glass-button[data-backdrop="dark"] {
+  box-shadow: var(--glass-button-edge-dark);
+  color: var(--color-text-secondary);
+}
+[data-backdrop="dark"] .glass-button::before,
+.glass-button[data-backdrop="dark"]::before { opacity: 0; }
+[data-backdrop="dark"] .glass-button::after,
+.glass-button[data-backdrop="dark"]::after { opacity: 1; }
+/* Иконки — SVG-картинки цвета Icon/Primary #4A4A4A: подсвечиваем до ≈ Text/Secondary #9F9F9F */
+[data-backdrop="dark"] .glass-button img,
+.glass-button[data-backdrop="dark"] img { filter: brightness(2.15); }
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-button,
+  .glass-button::before,
+  .glass-button::after,
+  .glass-button img { transition: none; }
+}
+
+/* ── Иконка внутри текста ──
+ * Фиксированный размер, по пробелу с каждой стороны (в разметке) + --space-text-icon.
+ * Оптически по центру высоты прописных: нижний край ниже базовой линии на
+ * (размер − cap-height) / 2. Фолбэк — значение для 16 px Suisse Intl. */
+.text-icon {
+  display: inline-block;
+  width: var(--size-text-icon);
+  height: var(--size-text-icon);
+  margin-inline: var(--space-text-icon);
+  vertical-align: -3.4px;
+  vertical-align: calc((1cap - var(--size-text-icon)) / 2);
+}
+
+/* ═════════════ Нижнее меню сайта ═════════════
+ * Figma: Card case 75:18834 / Main page 142:965 — внизу по центру, fixed.
+ * Десктоп: «Cases · Playground · CV» (радиус 12) + «Telegram» (пилюля).
+ * Мобайл: «Cases · Telegram» (радиус 12) + круглая кнопка с точками.
+ * Ссылок пока нет — пункты без href.
+ */
+.site-menu {
+  position: fixed;
+  inset-inline: 0;
+  /* Отступ от низа: токен или зона «домой» на iPhone минус 18 px — что больше. Зона на iPhone ≈ 34 px,
+     сама полоска «домой» — в нижних ~13 px: меню встаёт в 16 px от края, сразу над ней (решение пользователя:
+     ниже; целиком по зоне 34 px было слишком высоко). Без полоски — токен (мобайл 12, десктоп 24). */
+  --menu-bottom: max(var(--space-menu-bottom), env(safe-area-inset-bottom, 0px) - 18px);
+  bottom: var(--menu-bottom);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  pointer-events: none;
+}
+
+.site-menu__group,
+.site-menu__more {
+  pointer-events: auto;
+}
+
+.site-menu__group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  height: var(--size-control);
+  padding-inline: var(--space-4);
+  border-radius: var(--radius-m);
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-medium-weight);
+  line-height: var(--text-body-line);
+  white-space: nowrap;
+}
+
+.site-menu__group--pill { border-radius: var(--radius-full); }
+
+.site-menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: inherit;
+  text-decoration: none;
+}
+
+.site-menu__item img {
+  width: var(--size-icon-s);
+  height: var(--size-icon-s);
+}
+
+.site-menu__more {
+  display: grid;
+  place-items: center;
+  width: var(--size-control);
+  height: var(--size-control);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  font: inherit;
+  cursor: pointer;
+}
+
+.site-menu__more img {
+  width: var(--size-icon);
+  height: var(--size-icon);
+}
+
+.site-menu__mobile { display: none; }
+
+@media (max-width: 767px) {
+  .site-menu__desktop { display: none; }
+  .site-menu__mobile { display: flex; }
+  .site-menu__more.site-menu__mobile { display: grid; }
+}
+
+/* Конец страницы: когда долистали до конца, меню стоит посередине между последним блоком
+   и низом экрана — отступ «блок → меню» равен отступу «меню → низ» (--space-menu-bottom). */
+.page-end-space {
+  padding-bottom: calc(max(var(--space-menu-bottom), env(safe-area-inset-bottom, 0px) - 18px) + var(--size-control) + var(--space-menu-bottom));
+}
+
+/* Лицо карты (scripts/card-face.js): прямоугольник карты на мокапе — в % мокапа (data-face-rect),
+ * поэтому совпадает с картой при любом масштабе. Композиция Lottie 281×180 = вся карта,
+ * в JSON только лицо, фон карты даёт мокап. */
+.card-face {
+  position: absolute;
+  left: var(--face-x);
+  top: var(--face-y);
+  width: var(--face-w);
+  height: var(--face-h);
+  border-radius: var(--face-radius, 0);
+  overflow: hidden; /* трубочка не вылезает за край карты */
+}
+.card-face__player,
+.card-face__player > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Карусель шторок с Lottie-иллюстрацией (scripts/sheet-carousel.js). Место и размер карусели
+ * задаёт страница; здесь — шторки и иллюстрация. Шторки лежат стопкой, видна одна (остальные hidden),
+ * при смене JS двигает их только transform. Скругление шторки — обрезкой: в PNG скруглён только верх
+ * и меньшим радиусом, в эталоне (docs/reference/card-case-bottom-sheet-*.png) — все углы, ≈ 38 pt из 390. */
+.sheet-carousel__slide {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 9.83% / 7.03%;
+}
+.sheet-carousel__slide[hidden] { display: none; }
+.sheet-carousel__slide > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* Иллюстрация — в % шторки (data-sheet-art). Цветной квадрат есть и в JSON (280×280, радиус 80);
+ * фон здесь — тот же квадрат до загрузки плеера и без JS. */
+.sheet-carousel__art {
+  position: absolute;
+  left: var(--art-x);
+  top: var(--art-y);
+  width: var(--art-w);
+  height: var(--art-h);
+  border-radius: 28.571%;   /* 80 / 280 — как у квадрата в JSON */
+  overflow: hidden;
+  background: var(--sheet-art-bg, transparent);
+}
+.sheet-carousel__player,
+.sheet-carousel__player > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Прототип приложения в мокапе телефона (scripts/app-flow.js) ───────────
+ * Телефон: корпус-рамка (как у мокапа card-cabinet-stroke: плоская, #d8d8d8) + экран 390×844 pt.
+ * Размеры — в pt экрана, переводятся в %: компонент масштабируется целиком по своей ширине/высоте.
+ *   корпус 413.2 × 867.2 pt (рамка 11.6 pt), скругление корпуса 56.8 pt, экрана 45.2 pt — по эталону
+ *   docs/reference/Card case.png (×3.0896): корпус 219.1 × 460.3, рамка 6.15, радиусы 30.1 / 24 px макета.
+ * Живые части экрана (Lottie, подсветка нажатий, точки PIN) — абсолютные блоки с --x/--y/--w/--h/--r в pt.
+ * Цвета экрана — цвета приложения m10 (не сайта), сняты с эталонов docs/reference/card-activation/:
+ *   кнопка нажата — #141414 → #434343 (белый 20 %), клавиша нажата — #ebe8e7 → #dbd8d7 (чёрный 6.8 %). */
+.app-flow {
+  --flow-bezel: #d8d8d8;
+  --flow-screen: #f8f6f4;
+  --flow-ink: #141414;
+  --flow-press-light: rgb(255 255 255 / 0.2);
+  --flow-press-dark: rgb(0 0 0 / 0.068);
+  aspect-ratio: 413.2 / 867.2;
+}
+.app-flow__phone {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: calc(56.8 / 413.2 * 100%) / calc(56.8 / 867.2 * 100%);
+  background: var(--flow-bezel);
+}
+.app-flow__display {
+  position: absolute;
+  inset: calc(11.6 / 867.2 * 100%) calc(11.6 / 413.2 * 100%);
+  overflow: hidden;
+  border-radius: calc(45.2 / 390 * 100%) / calc(45.2 / 844 * 100%);
+  background: var(--flow-screen);
+  isolation: isolate;
+}
+.app-flow__screen,
+.app-flow__chrome {
+  position: absolute;
+  inset: 0;
+}
+/* Снимок уходящего телефона при смене (scripts/app-flow.js) — поверх того же места */
+.app-flow__ghost { position: absolute; inset: 0; }
+/* Переходы — чистый сдвиг/растворение: без тени у въезжающего экрана и без затемнения уходящего
+ * (решение пользователя). Тени внутри самих экранов (под картой) — часть SVG. */
+.app-flow__screen { background: var(--flow-screen); }
+.app-flow__screen[hidden] { display: none; }
+.app-flow__chrome { z-index: 100; pointer-events: none; }
+.app-flow [data-flow-keypad],
+.app-flow [data-flow-dots] { position: absolute; inset: 0; }
+/* Экран без своих системных элементов: статус-бар, крестик/стрелка (0–104 pt) и home indicator (820–844 pt)
+ * рисует общий слой .app-flow__chrome — они не уезжают вместе с экраном. */
+/* Картинки внутри прототипа — с удвоенным классом: общее правило медиа кейса (.case-media img { height: auto })
+ * не должно перебивать размеры экранов и системных элементов. */
+.app-flow .app-flow__ui {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: inset(calc(104 / 844 * 100%) 0 calc(24 / 844 * 100%) 0);
+}
+.app-flow__screen [style*="--x"],
+.app-flow .app-flow__chrome > img,
+.app-flow__press,
+.app-flow__dot {
+  position: absolute;
+  left: calc(var(--x) / 390 * 100%);
+  top: calc(var(--y) / 844 * 100%);
+  width: calc(var(--w) / 390 * 100%);
+  height: calc(var(--h) / 844 * 100%);
+  border-radius: calc(var(--r, 0) / var(--w) * 100%) / calc(var(--r, 0) / var(--h) * 100%);
+}
+.app-flow .app-flow__chrome > img[hidden] { display: none; }
+.app-flow__lottie { overflow: hidden; }
+.app-flow__player,
+.app-flow__player > svg {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+.app-flow__player[hidden] { display: none; }
+.app-flow__press { opacity: 0; background: var(--flow-press-dark); }
+.app-flow__press--light { background: var(--flow-press-light); }
+.app-flow__dot { opacity: 0; background: var(--flow-ink); }
+
+/*
+ * ── Прототип «открытие кабинета карты» (scripts/app-flow.js, переход "via": "sheet") ───────────
+ * Модификатор .app-flow--cabinet: телефон из слоёв Figma (media/optimized/card-case/card-cabinet-open/):
+ * экраны — SVG 306×644 pt вместе с корпусом (рамка 8 pt, экран 290×628 с радиусом 32 — как у мокапа
+ * card-cabinet-stroke), поэтому корпус, фон и скругление экрана CSS не рисует. Координаты --x/--y/--w/--h/--r —
+ * в pt телефона 306×644 (не 390×844, как у базового .app-flow).
+ * Слои поверх экранов (.app-flow__stage — обрезка по экрану): карта с лицом и шторка контента главного экрана.
+ * Их позы на экранах — data-flow-pose-<экран> (transform), JS двигает только transform.
+ * Системные элементы (.app-flow__chrome) не меняются при переходе: статус-бар — верх SVG главного экрана
+ * (тот же файл, обрезка по 50 pt: в SVG кабинета статус-бар выше на ≈ 1.5 pt — при растворении «прыгал» бы),
+ * home indicator — отдельный SVG. Тени (у карты и карточек шторки) — часть SVG, при переходах теней и затемнений нет. */
+.app-flow.app-flow--cabinet { aspect-ratio: 306 / 644; }
+.app-flow--cabinet .app-flow__phone {
+  border-radius: 0;
+  background: none;
+}
+.app-flow.app-flow--cabinet .app-flow__display {
+  inset: 0;
+  overflow: visible;
+  border-radius: 0;
+  background: none;
+}
+.app-flow.app-flow--cabinet .app-flow__screen { background: none; }
+.app-flow.app-flow--cabinet .app-flow__ui { clip-path: none; }
+.app-flow.app-flow--cabinet .app-flow__screen [style*="--x"],
+.app-flow.app-flow--cabinet .app-flow__chrome > img,
+.app-flow.app-flow--cabinet .app-flow__layer {
+  position: absolute;
+  left: calc(var(--x) / 306 * 100%);
+  top: calc(var(--y) / 644 * 100%);
+  width: calc(var(--w) / 306 * 100%);
+  height: calc(var(--h) / 644 * 100%);
+  border-radius: calc(var(--r, 0) / var(--w) * 100%) / calc(var(--r, 0) / var(--h) * 100%);
+}
+/* Экран телефона: слои обрезаются по нему (рамка корпуса — в SVG экранов) */
+.app-flow--cabinet .app-flow__stage {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  clip-path: inset(calc(8 / 644 * 100%) calc(8 / 306 * 100%) round calc(32 / 306 * 100%) / calc(32 / 644 * 100%));
+}
+/* Слой: размер в pt телефона, содержимое — в pt слоя (--lw × --lh) */
+.app-flow--cabinet .app-flow__layer {
+  --lw: var(--w);
+  --lh: var(--h);
+  transform-origin: var(--origin, 50% 50%);
+}
+.app-flow.app-flow--cabinet .app-flow__layer > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.app-flow.app-flow--cabinet .app-flow__layer [style*="--x"] {
+  left: calc(var(--x) / var(--lw) * 100%);
+  top: calc(var(--y) / var(--lh) * 100%);
+  width: calc(var(--w) / var(--lw) * 100%);
+  height: calc(var(--h) / var(--lh) * 100%);
+}
+.app-flow--cabinet .app-flow__status { clip-path: inset(0 0 calc(594 / 644 * 100%) 0); }
+/* Лицо карты на главном экране не видно (эталон 01: под шторкой выглядывали бы кончики бровей) —
+ * показывает сценарий (шаг { "face": "show" }); без JS лица нет. */
+.app-flow--cabinet .card-face { visibility: hidden; }
+
+/* ═════════════ Закрытые кейсы: курсор-замочек и плашка «locked» ═════════════
+ * Карточки с [data-locked] (кейсы ещё не готовы). Курсор — media/icons/cursor-lock.svg
+ * (горячая точка — центр замочка), запасной — not-allowed. Плашка едет справа, на одной линии с замочком,
+ * от курсора (scripts/locked-cursor.js), только на устройствах с мышью/трекпадом.
+ */
+[data-locked],
+[data-locked] * {
+  cursor: url("../media/icons/cursor-lock.svg") 10 10, not-allowed;
+}
+
+.locked-badge {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  width: 94px;
+  height: 26px;
+  margin: var(--locked-badge-offset-y) 0 0 var(--locked-badge-offset-x);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--motion-duration-backdrop) var(--motion-ease-backdrop);
+  will-change: transform;
+}
+.locked-badge.is-visible { opacity: 1; }
+/* У правого края экрана плашка не помещается справа — зеркально встаёт слева от замочка (scripts/locked-cursor.js) */
+.locked-badge.is-flipped { margin-left: calc(-1 * var(--locked-badge-offset-x) - 94px); }
+/* Английская версия: плашка живым текстом (scripts/locked-cursor.js) — как картинка badge-locked.svg:
+   26 px, радиус 8, Icon/Primary, белый текст 14 Medium. Ширина по тексту — переворот у края через translate. */
+.locked-badge--text {
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  padding-inline: var(--space-2);
+  border-radius: 8px;
+  background: var(--color-icon-primary);
+  color: white;
+  font-size: var(--text-caption-size);
+  font-weight: var(--text-caption-weight);
+  line-height: 1;
+  white-space: nowrap;
+}
+.locked-badge--text.is-flipped {
+  margin-left: var(--locked-badge-offset-x);
+  translate: calc(-100% - 2 * var(--locked-badge-offset-x)) 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .locked-badge { transition: none; }
+}
+
+/* Тап по закрытому кейсу на тач-устройствах: карточка размывается, по центру «Оформляю».
+ * Размытие — слой поверх карточки с backdrop-filter; плавность — только opacity.
+ * Эталон: docs/reference/main-mobile-locked-case.png. */
+.locked-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  border-radius: inherit;
+  background: rgb(23 23 23 / 0.4);       /* фолбэк без color-mix */
+  background: color-mix(in srgb, var(--color-bg-card-inverse) var(--locked-veil-tint), transparent);
+  backdrop-filter: blur(var(--locked-veil-blur));
+  -webkit-backdrop-filter: blur(var(--locked-veil-blur));
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--motion-duration-locked-out) var(--motion-ease-backdrop);
+}
+.is-locked-reveal .locked-veil {
+  opacity: 1;
+  transition-duration: var(--motion-duration-locked-in);
+}
+/* Содержимое карточки (обложка, логотип, теги, текст) под размытием гаснет: иначе светлая картинка
+   на тёмной карточке размывается в белый ореол. Гаснет и возвращается синхронно со слоем размытия. */
+[data-locked] > :not(.locked-veil) {
+  transition: opacity var(--motion-duration-locked-out) var(--motion-ease-backdrop);
+}
+.is-locked-reveal > :not(.locked-veil) {
+  opacity: var(--locked-content-fade);
+  transition-duration: var(--motion-duration-locked-in);
+}
+
+.locked-veil__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1-5, 6px);
+  color: white;
+  font-size: var(--text-body-size);
+  will-change: translate;               /* тряска по тапу — scripts/locked-cursor.js */
+  font-weight: var(--text-body-medium-weight);
+  line-height: var(--text-body-line);
+}
+.locked-veil__icon {
+  translate: 0 -1.5px;                  /* оптически на одной линии с текстом: низ замка иначе на 2.3 px ниже базовой линии */
+  width: var(--size-icon-s);
+  height: var(--size-icon-s);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .locked-veil,
+  .is-locked-reveal .locked-veil,
+  [data-locked] > :not(.locked-veil) { transition: none; }
+}
+
+/* MVP: скрытые пункты меню (атрибут hidden + data-mvp-hidden) не показываются на любой ширине,
+   даже если их класс задаёт display (например .site-menu__mobile на мобайле). */
+.site-menu [hidden] { display: none !important; }
+/* То же для любых скрытых до MVP блоков (медиа кейса и т. п.), у которых класс задаёт display */
+[hidden][data-mvp-hidden] { display: none !important; }
+
+/* Фокус с клавиатуры — единое фирменное кольцо для пунктов меню, пилюль и «Назад» (как у аватара и карточки) */
+.site-menu__item:focus-visible,
+.site-menu__group--pill:focus-visible,
+.case-back:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-text-primary);
+  outline-offset: var(--focus-ring-offset);
+}
+[data-backdrop="dark"] .site-menu__item:focus-visible,
+.site-menu__group--pill[data-backdrop="dark"]:focus-visible,
+.case-back[data-backdrop="dark"]:focus-visible { outline-color: var(--color-text-on-inverse); }
+
+/* ── Сравнение «до/после» (scripts/compare.js) ──
+ * Две картинки одного размера друг на друге: верхняя (.compare__img--top) обрезана справа по --compare-pos,
+ * под ней видна нижняя. Ползунок — вертикальная линия с ручкой (стекло), тянется мышью/пальцем,
+ * с клавиатуры — стрелками. Вертикальный скролл пальцем не перехватывается (touch-action: pan-y). */
+.compare {
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: ew-resize;
+}
+.compare__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+.compare__img--top { clip-path: inset(0 calc(100% - var(--compare-pos, 50%)) 0 0); }
+/* Слой может быть <picture> (своя картинка для мобайла) — картинка внутри заполняет слой */
+picture.compare__img { display: block; }
+picture.compare__img > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.compare__handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--compare-pos, 50%);
+  width: 2px;
+  margin-left: -1px;
+  background: white;
+  outline: none;
+}
+.compare__knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  width: var(--size-control);
+  height: var(--size-control);
+  border-radius: var(--radius-full);
+  background: var(--glass-fill);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-edge);
+  color: var(--color-icon-primary);
+}
+.compare__handle:focus-visible .compare__knob {
+  outline: var(--focus-ring-width) solid var(--color-text-primary);
+  outline-offset: var(--focus-ring-offset);
+}

@@ -1,0 +1,46 @@
+/*
+ * «Прокрутка букв» на ссылках. Разметку строит scripts/link-roll.js.
+ * Слово — маска по строке (clip-path, не overflow: так не меняется базовая линия inline-block),
+ * буква — пара «буква + копия под ней». Двигает только transform/opacity из JS (WAAPI).
+ */
+.link-roll__text { white-space: normal; }
+
+.link-roll__word {
+  display: inline-block;
+  white-space: nowrap;
+  vertical-align: top;
+  /* маска по высоте строки; по бокам — запас, чтобы не резать свесы букв */
+  clip-path: inset(0 -0.2em);
+}
+
+.link-roll__char {
+  position: relative;
+  display: inline-block;
+  white-space: pre;              /* неразрывный пробел внутри слова сохраняет ширину */
+}
+
+.link-roll__a,
+.link-roll__b { display: block; }
+
+.link-roll__b {
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;                     /* копия ждёт под буквой, за маской */
+}
+
+/* Текстовая ссылка на странице: подчёркивание рисуют сами буквы (у inline-block оно не наследуется) */
+.link-roll {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: var(--color-text-secondary);
+}
+.link-roll.is-rolling-ready { text-decoration: none; }
+.link-roll.is-rolling-ready .link-roll__a,
+.link-roll.is-rolling-ready .link-roll__b {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: var(--color-text-secondary);
+}

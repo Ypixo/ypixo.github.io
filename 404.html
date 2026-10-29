@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Страница не&nbsp;найдена&nbsp;— Дарья Л.</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#f3f3f3">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <!-- Пути от корня: хостинг отдаёт эту страницу на любом несуществующем адресе.
+       Референс docs/reference/error 404.png (4x от 1440): теги UX · UI · AI как на главной,
+       «404» — Text/32 Bold цвета акцента ровно по центру экрана, внизу — меню сайта. -->
+  <link rel="preload" href="/media/fonts/suisse-intl-medium.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/media/fonts/suisse-intl-bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles/tokens.css?v=r31">
+  <link rel="stylesheet" href="/styles/base.css?v=r3">
+  <link rel="stylesheet" href="/styles/components.css?v=r32">
+  <link rel="stylesheet" href="/styles/main.css?v=r3">
+  <link rel="stylesheet" href="/styles/link-roll.css?v=r3">
+  <script src="/scripts/link-roll.js?v=r3" defer></script>
+  <style>
+    .not-found {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+    }
+    .not-found__code {
+      color: var(--color-accent);
+      font-variant-numeric: tabular-nums;   /* цифры одной ширины — счётчик не дрожит */
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__tags grid t-caption">
+      <span class="hero__tag hero__tag--ux">UX</span>
+      <span class="hero__tag hero__tag--ui">UI</span>
+      <span class="hero__tag hero__tag--ai">AI</span>
+    </div>
+  </header>
+
+  <main class="not-found">
+    <h1 class="not-found__code t-heading" aria-label="404 — страница не&nbsp;найдена"><span id="not-found-count" aria-hidden="true">404</span></h1>
+  </main>
+  <script>
+    /* Счётчик 0 → 404 почти мгновенно: 450 мс, быстрый старт и мягкая остановка на 404.
+       Скрипт сразу за числом — «0» ставится до первой отрисовки. Без JS и при reduced motion — просто 404. */
+    (function () {
+      var el = document.getElementById('not-found-count');
+      var END = 404, DUR = 450;
+      if (!window.requestAnimationFrame || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      el.textContent = '0';
+      var t0 = null, done = false;
+      function step(now) {
+        if (done) return;
+        if (t0 === null) t0 = now;
+        var p = Math.min(1, (now - t0) / DUR);
+        var e = 1 - Math.pow(1 - p, 3);        // ease-out cubic
+        el.textContent = String(Math.round(END * e));
+        if (p < 1) requestAnimationFrame(step); else done = true;
+      }
+      requestAnimationFrame(step);
+      // страховка: если кадры не идут или застряли (фоновая вкладка) — число всё равно встаёт на 404
+      setTimeout(function () { if (!done) { done = true; el.textContent = String(END); } }, DUR + 300);
+    })();
+  </script>
+
+  <!-- Меню сайта — как на главной (MVP: «Кейсы · Telegram» + пилюля CV) -->
+  <nav class="site-menu" aria-label="Меню сайта">
+    <ul class="site-menu__group glass-button" data-glass-adapt>
+      <li><a class="site-menu__item" href="/#cases">Кейсы</a></li>
+      <li><a class="site-menu__item" href="https://t.me/lugovayadarya" target="_blank" rel="noopener noreferrer">Telegram</a></li>
+    </ul>
+    <a class="site-menu__group site-menu__group--pill site-menu__item site-menu__cv-pill glass-button" data-glass-adapt href="/media/cv/darya-lugovaya-cv-ru.pdf" target="_blank" rel="noopener noreferrer">
+      <img src="/media/icons/20_icon_download_stroke.svg" alt="" width="20" height="20">CV
+    </a>
+  </nav>
+  <script src="/scripts/glass-backdrop.js?v=r3" defer></script>
+</body>
+</html>

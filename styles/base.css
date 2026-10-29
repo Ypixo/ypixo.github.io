@@ -1,0 +1,63 @@
+/*
+ * Portfolio — общая база для всех страниц: сброс, фон, текстовые стили.
+ * Токены и .grid — styles/tokens.css.
+ */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;           /* якоря меню: #cases, #playground */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, p, ul { margin: 0; }
+ul { padding: 0; list-style: none; }
+img { display: block; }
+
+/* ── Текстовые стили (из витрины дизайн-системы) ── */
+.t-heading {
+  font-size: var(--text-heading-size);
+  font-weight: var(--text-heading-weight);
+  letter-spacing: var(--text-heading-tracking);
+  line-height: var(--text-heading-line);
+}
+
+.t-body-bold {
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-bold-weight);
+  line-height: var(--text-body-line);
+}
+
+.t-caption {
+  font-size: var(--text-caption-size);
+  font-weight: var(--text-caption-weight);
+  line-height: var(--text-caption-line);
+}
+
+/* Пара «слово + иконка» (и знак препинания после неё) не разрывается переносом */
+.nowrap { white-space: nowrap; }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

@@ -1,0 +1,341 @@
+/*
+ * Portfolio — страница кейса (Digital Card).
+ * Figma: Card case 75:18834 (1440) / Card case mobile (380).
+ * Сетка — docs/grid.md. Текст кейса — колонка на сетке:
+ *   ≥ 1280: колонки 4–9, заголовок и красная строка — с 5-й;
+ *   768–1279: колонки расширяются на одну с каждой стороны (3–10, с 4-й);
+ *   < 768: колонки 1–6, заголовок и красная строка — с 3-й.
+ * Медиа — по ширине текстовой колонки + половина гаттера с каждой стороны
+ * (680 на 1440), на мобайле — ровно по колонкам 1–6 (348 на 380).
+ * Высота медиа — через aspect-ratio из макета (--media-h — высота в макете 1440).
+ */
+
+/* Колонки текста берутся из токенов --article-col-* (tokens.css, группа Article). */
+.case-page,
+.case-head {
+  --c-start: var(--article-col-start);
+  --c-title: var(--article-col-title);
+  --c-last: var(--article-col-last);
+  --c-count: calc(var(--article-col-last) - var(--article-col-start) + 1);
+  --c-indent: var(--article-indent-cols);
+  --media-bleed: calc(var(--grid-gutter) / -2);
+  --media-w: 680;   /* ширина медиа в макете для пропорции */
+}
+
+@media (max-width: 767px) {
+  .case-page,
+  .case-head {
+    --media-bleed: 0px;
+  }
+}
+
+/* Мобильная пропорция медиа (и мобильные картинки в <picture>) — только до 479 px.
+   На 480–767 раскладка мобильная, но медиа — с десктопной пропорцией: иначе слишком высокие. */
+@media (max-width: 479px) {
+  .case-page,
+  .case-head {
+    --media-w: 348;
+  }
+}
+
+/* ── Фиксированные контролы ──
+ * «Назад» — слева по полю сетки, прогресс — справа по полю. Сверху 18 / 56 (макет). */
+.case-back,
+.case-progress {
+  position: fixed;
+  top: calc(var(--article-controls-top) + env(safe-area-inset-top, 0px));
+  z-index: 10;
+}
+
+.case-back {
+  left: var(--grid-margin);
+  display: grid;
+  place-items: center;
+  width: var(--size-control);
+  height: var(--size-control);
+  border-radius: var(--radius-full);
+}
+
+.case-back img {
+  width: var(--size-icon);
+  height: var(--size-icon);
+}
+
+/* Прогресс прочтения: трек Text/Secondary 40 % + дуга Text/Primary от 12 часов по часовой */
+.case-progress {
+  right: var(--grid-margin);
+  width: var(--size-progress);
+  height: var(--size-progress);
+  fill: none;
+  stroke-width: var(--size-progress-stroke);
+}
+
+.case-progress__track {
+  stroke: color-mix(in srgb, var(--color-text-secondary) 40%, transparent);
+  transition: stroke var(--motion-duration-backdrop) var(--motion-ease-backdrop);
+}
+
+/* Под индикатором тёмное (scripts/glass-backdrop.js) — плавно высветляем, как текст меню:
+   дуга Text/Secondary, трек — светлее. */
+.case-progress[data-backdrop="dark"] .case-progress__track {
+  stroke: color-mix(in srgb, var(--color-bg-page) 25%, transparent);
+}
+.case-progress[data-backdrop="dark"] .case-progress__arc {
+  stroke: var(--color-text-secondary);
+}
+
+.case-progress__arc {
+  stroke: var(--color-text-primary);
+  stroke-linecap: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;   /* JS: 100 − доля × 100 */
+  opacity: 0;               /* при 0 скрыта, иначе круглый кэп рисует точку */
+  transform: rotate(-90deg);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    stroke-dashoffset 120ms linear,
+    stroke var(--motion-duration-backdrop) var(--motion-ease-backdrop);
+}
+
+/* Мобайл: «Назад» и прогресс сначала стоят на 56 px и уезжают вверх вместе со страницей,
+   а в --article-controls-stick (16 px) от верха прилипают и дальше едут на этой высоте.
+   Без JS: обёртка нулевой высоты в начале страницы — sticky с отрицательным top
+   (прилипает, когда проскроллили 56 − 16 = 40 px); контролы внутри — absolute на 56 px. */
+@media (max-width: 767px) {
+  .case-controls {
+    position: sticky;
+    top: calc(var(--article-controls-stick) - var(--article-controls-top));
+    z-index: 10;
+    height: 0;
+  }
+  .case-controls .case-back,
+  .case-controls .case-progress {
+    position: absolute;
+    top: calc(var(--article-controls-top) + env(safe-area-inset-top, 0px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .case-progress__arc,
+  .case-progress__track { transition: none; }
+}
+
+/* ── Мета-строка «/ · 5 mins · 2026» — как навигация в hero главной ── */
+.case-head { padding-top: var(--article-meta-top); }
+
+.case-meta { color: var(--color-text-secondary); }
+.case-meta > * { grid-row: 1; }
+.case-meta__crumb { grid-column: var(--c-start); }
+.case-meta__time { grid-column: var(--c-title); }
+.case-meta__year { grid-column: var(--c-last); justify-self: end; }
+
+
+/* ── Текст кейса ── */
+.case-body {
+  /* ширина одной колонки внутри текстового блока + гаттер */
+  --c-step: calc((100% - (var(--c-count) - 1) * var(--grid-gutter)) / var(--c-count) + var(--grid-gutter));
+  grid-column: var(--c-start) / calc(var(--c-last) + 1);
+  line-height: var(--article-line);
+}
+
+.case-title {
+  margin-top: var(--article-top);
+  padding-left: calc(var(--c-indent) * var(--c-step));
+}
+
+.case-body > * + * { margin-top: var(--article-paragraph); }
+.case-body > .case-intro {
+  margin-top: var(--article-title-gap);
+  text-indent: calc(var(--c-indent) * var(--c-step));
+}
+
+/* Подзаголовки секций — 16 Bold */
+.case-h {
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-bold-weight);
+  line-height: var(--article-line);
+}
+.case-body > .case-h + * { margin-top: var(--article-heading-gap); }
+
+/* Лейблы-пилюли */
+.case-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--article-tags-gap-y) var(--article-tags-gap-x);
+}
+
+/* Список с маркером-точкой: текст с отступом 24, точка по центру отступа */
+.case-list li {
+  position: relative;
+  padding-left: var(--article-list-indent);
+}
+.case-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  width: var(--article-list-indent);
+  text-align: center;
+}
+
+/* Медиа: серый плейсхолдер вместо картинки/видео, пропорция макета */
+.case-body > .case-media {
+  margin-block: var(--article-media-gap);
+  margin-inline: var(--media-bleed);
+  aspect-ratio: var(--media-w) / var(--media-h);
+  border-radius: var(--radius-card);
+  background: var(--color-bg-card);
+}
+
+/* Своя высота рамки-плейсхолдера на мобайле (до 479 px), если в мобильном эталоне она другая:
+ * style="--media-h: 520; --media-h-mobile: 451" (ширина — 348, как у всех медиа). */
+@media (max-width: 479px) {
+  .case-body > .case-media {
+    aspect-ratio: var(--media-w) / var(--media-h-mobile, var(--media-h));
+  }
+}
+
+/* Медиа-картинка: <picture> вместо плейсхолдера. Пропорцию задают width/height
+ * у <img> (десктоп) или у <source> с media="(max-width: 479px)" (мобильная версия,
+ * если есть) — поэтому aspect-ratio контейнера здесь не задаётся. Скругление —
+ * обрезкой по рамке, сами картинки выгружены без скруглений. См. docs/images.md. */
+.case-body > picture.case-media {
+  display: block;
+  aspect-ratio: auto;
+  overflow: hidden;
+}
+.case-media img {
+  width: 100%;
+  height: auto;
+}
+
+/* Медиа с мокапом телефона и «живым» лицом на карте (медиа 1, scripts/card-face.js).
+ * Рамка — обычный плейсхолдер (пропорция из --media-h), телефон — по высоте рамки, как в эталоне
+ * (docs/reference, 4x): 1440 — рамка 680×520, 380 — 348×520; в обоих телефон 306 × 644,
+ * сверху 47.7, по центру. Низ телефона обрезает рамка. Подробно — docs/images.md. */
+.case-body > .case-media--device {
+  position: relative;
+  overflow: hidden;
+}
+.case-media__device {
+  position: absolute;
+  top: calc(47.7 / 520 * 100%);
+  height: calc(644.5 / 520 * 100%);
+  left: 50%;
+  aspect-ratio: 1224 / 2576;
+  transform: translateX(-50%);
+}
+.case-media__device > img { height: 100%; }
+
+/* Медиа с каруселью шторок «возможности карты» (scripts/sheet-carousel.js, стили шторок — components.css).
+ * Шторка — по высоте рамки, по центру, как в эталонах (docs/reference: card-case-bottom-sheet-*.png, 4x;
+ * Card case mobile.png, ×3.287):
+ *   1440 (и 480–767 с десктопной пропорцией) — рамка 680×520, шторка 279.4 × 390.5, сверху 63.5;
+ *   до 479 px — рамка 348×451 (--media-h-mobile), шторка 241.6 × 337.7, сверху 56.9.
+ * Значения — в px макета, переводятся в % высоты рамки. Уходящая шторка уезжает за край рамки — рамка её обрезает. */
+.case-body > .case-media--sheets {
+  --sheet-frame-h: 520;
+  --sheet-top: 63.5;
+  --sheet-h: 390.5;
+  position: relative;
+  overflow: hidden;
+}
+@media (max-width: 479px) {
+  .case-body > .case-media--sheets {
+    --sheet-frame-h: 451;
+    --sheet-top: 56.9;
+    --sheet-h: 337.7;
+  }
+}
+.case-media--sheets .sheet-carousel {
+  position: absolute;
+  top: calc(var(--sheet-top) / var(--sheet-frame-h) * 100%);
+  height: calc(var(--sheet-h) / var(--sheet-frame-h) * 100%);
+  left: 50%;
+  aspect-ratio: 1170 / 1635;
+  transform: translateX(-50%);
+}
+
+/* Медиа «Эмоции карты» (раздел 02): картинка на всю рамку и Lottie-лица на картах
+ * (scripts/card-face.js: одна карта чередует flag ↔ look-around, две стоят на кадрах покоя). Пропорция картинки = пропорции рамки (680×503, до 479 px — 348×451),
+ * поэтому карты задаются в % картинки (data-face-rect). Десктопные карты (три) и мобильная (одна, flag) —
+ * разные элементы: скрытые через display: none не грузятся. */
+.case-body > .case-media--faces {
+  position: relative;
+  overflow: hidden;
+}
+.case-media--faces > picture > img {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  object-fit: cover;
+}
+.case-media--faces .card-face--mobile { display: none; }
+@media (max-width: 479px) {
+  .case-media--faces .card-face--desktop { display: none; }
+  .case-media--faces .card-face--mobile { display: block; }
+}
+
+/* Последний блок статьи без нижнего отступа: конец страницы задаёт .page-end-space
+   (меню посередине между последним блоком и низом экрана). */
+.case-body > :last-child { margin-bottom: 0; }
+
+/* Медиа с прототипом приложения «Новый экран активации» (медиа 5 кейса Digital Card, scripts/app-flow.js, компонент — components.css) ──────────────────────────
+ * Рамка — обычный плейсхолдер 680×520 (--media-h: 520). Телефон по высоте рамки, по центру, целиком: 460.3 из 520, сверху 29.8 (эталон ×3.0896). */
+.case-body > .case-media--flow {
+  position: relative;
+  overflow: hidden;
+}
+.case-media--flow .app-flow {
+  /* Смена телефона: сдвиг в % высоты телефона, чтобы целиком уйти за край рамки:
+   * (520 − 29.8) / 460.3 = 106.5 % вниз и (29.8 + 460.3) / 460.3 = 106.5 % сверху; с запасом на сглаживание. */
+  --flow-swap-shift: 107%;
+  position: absolute;
+  top: calc(29.8 / 520 * 100%);
+  height: calc(460.3 / 520 * 100%);
+  left: 50%;
+  transform: translateX(-50%);
+}
+/* До 479 px — рамка и телефон по размеру картинки Card security (Card case mobile.png, ×3.287):
+ * рамка 348 × 674.6 (--media-h-mobile, = 390×756 картинки), телефон шириной 272.3 (высота 571.5), сверху 49.6,
+ * по центру, целиком. Сдвиг смены: (674.6 − 49.6) / 571.5 = 109.4 % — с запасом 110 %. */
+@media (max-width: 479px) {
+  .case-media--flow .app-flow {
+    --flow-swap-shift: 110%;
+    top: calc(49.6 / 674.6 * 100%);
+    height: calc(571.5 / 674.6 * 100%);
+  }
+}
+
+/*
+ * Медиа «Открытие кабинета карты» (раздел 03 кейса Digital Card, scripts/app-flow.js, компонент — .app-flow--cabinet).
+ * Подача — как у медиа 1 (.case-media--device, эталон docs/reference/Card case.png, ×3.0896) на всех ширинах:
+ * рамка 680×520 (до 479 px — 348×520, своей мобильной пропорции нет), телефон 306 × 644.5 по центру, сверху 47.7,
+ * низ обрезает рамка — видны карта, баланс и начало списка кабинета. По решению пользователя на мобайле — так же. */
+.case-body > .case-media--cabinet {
+  position: relative;
+  overflow: hidden;
+}
+.case-media--cabinet .app-flow {
+  position: absolute;
+  top: calc(47.7 / 520 * 100%);
+  height: calc(644.5 / 520 * 100%);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Перенос строки заголовка только для десктопа (на узкой колонке мобайла строка переносится сама) */
+@media (max-width: 767px) {
+  .case-title .br-desktop { display: none; }
+  .case-title__extra { display: none; }   /* кейс Design System: на мобайле без «m10» (решение пользователя) */
+  /* Длинное слово в заголовке («дизайн‑системы» с неразрывным дефисом) не влезает в колонку с отступом —
+     на мобайле такой заголовок начинается от левого края колонки текста */
+  .case-title--long { padding-left: 0; }
+}
+
+/* Медиа только для десктопа / только для мобайла (до 479 px) — например, сравнение «до/после» в кейсе Design System */
+.case-body > .case-media--mobile-only { display: none; }
+@media (max-width: 479px) {
+  .case-body > .case-media.case-media--desktop-only { display: none; }
+  .case-body > .case-media--mobile-only { display: block; }
+}

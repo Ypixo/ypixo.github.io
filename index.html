@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ru" data-reload-top>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Дарья Л.&nbsp;— Product designer</title>
+  <meta name="description" content="Дарья Луговая — продуктовый дизайнер. 5+ лет в B2C, финтехе и крипто. Кейсы: первая цифровая карта m10, дизайн-система, редизайн сайта m10.">
+  <link rel="canonical" href="https://lugovayadarya.ru/">
+  <link rel="alternate" hreflang="ru" href="https://lugovayadarya.ru/">
+  <link rel="alternate" hreflang="en" href="https://lugovayadarya.ru/en/">
+  <link rel="alternate" hreflang="x-default" href="https://lugovayadarya.ru/">
+  <meta name="theme-color" content="#f3f3f3">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:site_name" content="Дарья Л.">
+  <meta property="og:title" content="Дарья Л. — Product designer">
+  <meta property="og:description" content="Дарья Луговая — продуктовый дизайнер. 5+ лет в B2C, финтехе и крипто. Кейсы: первая цифровая карта m10, дизайн-система, редизайн сайта m10.">
+  <meta property="og:url" content="https://lugovayadarya.ru/">
+  <meta property="og:image" content="https://lugovayadarya.ru/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Дарья Л. — Product designer, 5+ years experience, B2C, fintech, crypto">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="media/fonts/suisse-intl-book.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="media/fonts/suisse-intl-medium.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="media/fonts/suisse-intl-bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles/tokens.css?v=r31">
+  <link rel="stylesheet" href="styles/base.css?v=r3">
+  <link rel="stylesheet" href="styles/components.css?v=r32">
+  <link rel="stylesheet" href="styles/main.css?v=r3">
+  <link rel="stylesheet" href="styles/page-transitions.css?v=r9">
+  <link rel="stylesheet" href="styles/link-roll.css?v=r3">
+  <link rel="stylesheet" href="styles/playground.css?v=r31">
+  <link rel="stylesheet" href="styles/avatar-popup.css?v=r22">
+  <!-- Переходы между страницами: первый кадр — когда заголовок уже разобран (его строки собирает page-transition.js) -->
+  <link rel="expect" href="#page-title" blocking="render">
+  <link rel="expect" href="#page-lead" blocking="render">
+  <script src="scripts/page-transition.js?v=r9" blocking="render"></script>
+  <script src="scripts/link-roll.js?v=r3" defer></script>
+</head>
+<body>
+  <!-- Hero. Figma: 142:965 (1440) / 120:43641 (380) -->
+  <header class="hero">
+    <div class="hero__tags grid t-caption">
+      <span class="hero__tag hero__tag--ux">UX</span>
+      <span class="hero__tag hero__tag--ui">UI</span>
+      <span class="hero__tag hero__tag--ai">AI</span>
+    </div>
+
+    <div class="hero__intro">
+      <div class="hero__id">
+        <h1 class="hero__name t-heading" id="page-title" data-reveal-lines data-reveal-on-load>Дàрья&nbsp;Л.</h1>
+        <button type="button" class="hero__avatar" data-reveal-pop data-avatar-open aria-haspopup="dialog" aria-label="Открыть фото">
+          <img src="media/optimized/Avatar-1x.webp" srcset="media/optimized/Avatar-1x.webp 1x, media/optimized/Avatar-2x.webp 2x" alt="" width="48" height="48" decoding="async">
+        </button>
+      </div>
+      <p class="hero__lead t-heading" id="page-lead" data-reveal-lines data-reveal-on-load>Product designer<br>5+ years experience<br>B2C, fintech, crypto</p>
+    </div>
+  </header>
+
+  <main class="page-end-space">
+    <!-- Кейсы. Figma: Main page 142:965 / Main page mobile 120:43641.
+         Обложки: Digital Card — мокап + живое лицо; Design System — статичная панель иконок;
+         m10 Web Redesign — живой скролл сайта в Safari (на мобайле — статичный iPhone). -->
+    <section class="cases grid" id="cases" aria-label="Кейсы">
+      <!-- Кликабельна вся карточка: ссылка в заголовке растянута на карточку (.case__link::after) -->
+      <article data-scroll-bend class="case case--link" data-reveal-rise>
+        <!-- Обложка: мокап телефона, на карте — «живое» лицо (Lottie, scripts/card-face.js).
+             Телефон — по высоте карточки, лицо — на карте мокапа в % мокапа. Без JS — просто мокап. -->
+        <div class="case__cover">
+          <img class="case__mockup" src="media/optimized/card-cabinet-mockup-1x.webp"
+               srcset="media/optimized/card-cabinet-mockup-1x.webp 1x, media/optimized/card-cabinet-mockup-2x.webp 2x"
+               width="320" height="654" alt="" decoding="async">
+          <div class="card-face" aria-hidden="true"
+               data-card-face="drinking stare-blink"
+               data-face-src="media/optimized/card-animations/"
+               data-face-rect="17.35 22.23 65.24 20.45"
+               data-face-radius="5.74% / 8.96%"></div>
+        </div>
+        <img class="case__logo" src="media/optimized/m10-logo-2x.webp" srcset="media/optimized/m10-logo-1x.webp 1x, media/optimized/m10-logo-2x.webp 2x, media/optimized/m10-logo-3x.webp 3x" alt="m10" width="49" height="49">
+        <ul class="case__tags t-caption" aria-label="Теги">
+          <li class="case__tag label">UX/UI</li>
+          <li class="case__tag label">0&nbsp;→&nbsp;1</li>
+        </ul>
+        <div class="case__text">
+          <h2 class="case__title t-body-bold"><a class="case__link" href="cases/digital-card/">Digital Card</a></h2>
+          <p class="case__desc t-caption">Запуск первой цифровой карты<br>в&nbsp;азербайджанском e&#8209;wallet</p>
+        </div>
+      </article>
+
+      <!-- data-glass-surfaces: стекло меню над карточкой смотрит и на картинки обложки (scripts/glass-backdrop.js) -->
+      <article data-scroll-bend class="case case--inverse case--link" data-glass-surfaces data-reveal-rise>
+        <!-- Обложка: панель иконок «24 stroke» с плашкой Development, статично. На мобайле — своя композиция. -->
+        <picture class="case__cover case__cover--ds" aria-hidden="true">
+          <source media="(max-width: 767px)"
+                  srcset="media/optimized/covers/mobile/design-system-icons-1x.webp 1x, media/optimized/covers/mobile/design-system-icons-2x.webp 2x"
+                  width="280" height="470">
+          <img class="case__cover-img" src="media/optimized/covers/design-system-icons-1x.webp"
+               srcset="media/optimized/covers/design-system-icons-1x.webp 1x, media/optimized/covers/design-system-icons-2x.webp 2x"
+               width="880" height="589" alt="" loading="lazy" decoding="async" data-glass-surface>
+        </picture>
+        <img class="case__logo" src="media/optimized/m10-logo-2x.webp" srcset="media/optimized/m10-logo-1x.webp 1x, media/optimized/m10-logo-2x.webp 2x, media/optimized/m10-logo-3x.webp 3x" alt="m10" width="49" height="49">
+        <ul class="case__tags t-caption" aria-label="Теги">
+          <li class="case__tag label">Scalability</li>
+          <!-- На мобайле только первый тег — так задумано (design-system: «Решения») -->
+          <li class="case__tag case__tag--desktop label">UI Architecture</li>
+        </ul>
+        <div class="case__text">
+          <h2 class="case__title t-body-bold"><a class="case__link" href="cases/design-system/">Design System</a></h2>
+          <p class="case__desc t-caption">30%&nbsp;→&nbsp;90% компонентов в&nbsp;коде,<br>гибкий UI без&nbsp;detach</p>
+        </div>
+      </article>
+
+      <article data-scroll-bend class="case" data-glass-surfaces data-locked data-reveal-rise>
+        <!-- Обложка: десктоп (≥ 768) — окно Safari, внутри сайт m10 листается сам (scripts/browser-scroll.js):
+             длинная страница — 3 тайла, грузятся при подъезде; сценарий жестов — JSON ниже.
+             Без JS и при reduced motion — первый экран сайта статично. Мобайл — статичная картинка iPhone. -->
+        <div class="case__cover case__cover--web" aria-hidden="true">
+          <div class="browser-scroll" data-browser-scroll>
+            <div class="browser-scroll__window" data-glass-clip style="--page-bg: #f4f0ee">
+              <div class="browser-scroll__page" style="--page-w: 4320; --page-h: 10239; --page-end: #141414">
+                <!-- <source> с пустой картинкой: на мобайле окно не показывается и его картинки не грузятся
+                     (display: none у lazy-картинок от загрузки не спасает) -->
+                <picture>
+                  <source media="(max-width: 767px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+                  <img class="browser-scroll__tile" style="--y: 0; --h: 4010"
+                       src="media/optimized/covers/m10-web-page-01-1x.webp"
+                       srcset="media/optimized/covers/m10-web-page-01-1x.webp 1x, media/optimized/covers/m10-web-page-01-2x.webp 2x"
+                       width="864" height="802" alt="" loading="lazy" decoding="async" data-glass-surface>
+                </picture>
+                <img class="browser-scroll__tile" style="--y: 4000; --h: 4010"
+                     data-srcset="media/optimized/covers/m10-web-page-02-1x.webp 1x, media/optimized/covers/m10-web-page-02-2x.webp 2x"
+                     width="864" height="802" alt="" decoding="async" data-glass-surface>
+                <img class="browser-scroll__tile" style="--y: 8000; --h: 2239"
+                     data-srcset="media/optimized/covers/m10-web-page-03-1x.webp 1x, media/optimized/covers/m10-web-page-03-2x.webp 2x"
+                     width="864" height="448" alt="" decoding="async" data-glass-surface>
+              </div>
+            </div>
+            <picture>
+              <source media="(max-width: 767px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+              <img class="browser-scroll__frame" src="media/optimized/covers/safari-frame-1x.webp"
+                   srcset="media/optimized/covers/safari-frame-1x.webp 1x, media/optimized/covers/safari-frame-2x.webp 2x"
+                   width="880" height="625" alt="" loading="lazy" decoding="async" data-glass-surface>
+            </picture>
+            <!-- Сценарий: позиции — px страницы сайта шириной 1440 ("end" — низ страницы), время — токены tokens.css.
+                 Остановки: первый экран → карточки → «How to pay» (перелёт и поправка) → справочник → футер с QR
+                 («резинка» у низа) → быстро наверх. -->
+            <script type="application/json" data-browser-scroll-script>
+              {
+                "unit": 1440,
+                "steps": [
+                  { "hold": "--motion-duration-scroll-hold-top" },
+                  { "to": 640, "dur": "--motion-duration-scroll-flick", "ease": "--motion-ease-scroll-flick" },
+                  { "hold": "--motion-duration-scroll-glance" },
+                  { "to": 1295, "dur": "--motion-duration-scroll-flick-long", "ease": "--motion-ease-scroll-flick" },
+                  { "to": 1215, "dur": "--motion-duration-scroll-correct", "ease": "--motion-ease-scroll-correct" },
+                  { "hold": "--motion-duration-scroll-read" },
+                  { "to": 1520, "dur": "--motion-duration-scroll-flick-short", "ease": "--motion-ease-scroll-flick" },
+                  { "hold": "--motion-duration-scroll-regrip" },
+                  { "to": 2110, "dur": "--motion-duration-scroll-flick", "ease": "--motion-ease-scroll-flick" },
+                  { "hold": "--motion-duration-scroll-read" },
+                  { "to": "end", "past": 40, "dur": "--motion-duration-scroll-flick", "ease": "--motion-ease-scroll-flick" },
+                  { "to": "end", "dur": "--motion-duration-scroll-bounce", "ease": "--motion-ease-scroll-bounce" },
+                  { "hold": "--motion-duration-scroll-hold-end" },
+                  { "to": 0, "dur": "--motion-duration-scroll-to-top", "ease": "--motion-ease-scroll-to-top" }
+                ]
+              }
+            </script>
+          </div>
+          <picture>
+            <source media="(min-width: 768px)" srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+            <img class="case__cover-img" src="media/optimized/covers/mobile/m10-web-iphone-1x.webp"
+                 srcset="media/optimized/covers/mobile/m10-web-iphone-1x.webp 1x, media/optimized/covers/mobile/m10-web-iphone-2x.webp 2x"
+                 width="300" height="613" alt="" loading="lazy" decoding="async" data-glass-surface>
+          </picture>
+        </div>
+        <img class="case__logo" src="media/optimized/m10-logo-2x.webp" srcset="media/optimized/m10-logo-1x.webp 1x, media/optimized/m10-logo-2x.webp 2x, media/optimized/m10-logo-3x.webp 3x" alt="m10" width="49" height="49">
+        <ul class="case__tags t-caption" aria-label="Теги">
+          <li class="case__tag label">Rebranding</li>
+          <li class="case__tag label">Web</li>
+        </ul>
+        <div class="case__text">
+          <h2 class="case__title t-body-bold">m10 Web Redesign<span class="visually-hidden"> (кейс в&nbsp;работе)</span></h2>
+          <!-- Переносы на десктопе и мобайле в макете разные -->
+          <p class="case__desc t-caption">Новая визуальная система и&nbsp;архитектура,<br> +49% к&nbsp;конверсии в&nbsp;скачивание</p>
+        </div>
+      </article>
+    </section>
+
+    <!-- Playground — перекати-поле (styles/playground.css, scripts/playground.js, scripts/tumbleweed.js).
+         Референсы docs/reference/main pg.png, main pg-1.png. На подъезде фон страницы темнеет. -->
+    <section class="playground" id="playground" aria-labelledby="playground-title">
+      <h2 class="playground__title t-heading" id="playground-title">
+        <span class="playground__play">Plày</span>
+        <span class="playground__ground">Ground</span>
+      </h2>
+      <div class="tumble" data-tumble aria-hidden="true">
+        <video class="tumble__video" src="media/optimized/playground/tumbleweed.mp4" poster="media/optimized/playground/tumbleweed-poster.webp"
+               width="1920" height="820" muted playsinline preload="metadata" disablepictureinpicture></video>
+      </div>
+    </section>
+  </main>
+
+  <!-- Нижнее меню сайта (fixed). Figma: Main page 142:965 / Main page mobile 120:43641.
+       Блок Playground на главной есть (перекати-поле), пункта в меню нет — решение пользователя. -->
+  <!-- MVP (2026-10-26): Playground, CV-текстом, пилюля Telegram с иконкой и кнопка «Ещё» скрыты атрибутом hidden (data-mvp-hidden), не удалены — вернёмся к ним позже. Меню на всех ширинах: «Кейсы · Telegram» + пилюля CV с иконкой «скачать». -->
+  <!-- Поп-ап с большим аватаром (styles/avatar-popup.css, scripts/avatar-popup.js). Референс docs/reference/avatar open.png -->
+  <dialog class="avatar-pop" aria-label="Фото Дарьи" tabindex="-1">
+    <div class="avatar-pop__veil" data-avatar-close></div>
+    <button class="avatar-pop__close glass-button" data-backdrop="dark" type="button" aria-label="Закрыть" data-avatar-close>
+      <img src="media/icons/cross.svg" alt="" width="24" height="24" loading="lazy">
+    </button>
+    <!-- Плеер: песня играет сразу при открытии, но без звука; кнопка справа включает и выключает звук -->
+    <div class="avatar-pop__player">
+      <div class="player glass-button" data-backdrop="dark">
+        <img class="player__cover" src="media/optimized/zemfira-vendetta-cover-1x.webp" srcset="media/optimized/zemfira-vendetta-cover-1x.webp 1x, media/optimized/zemfira-vendetta-cover-2x.webp 2x" width="48" height="48" alt="" decoding="async" loading="lazy">
+        <span class="player__text"><span class="player__title">Прогулка</span><span class="player__artist">Земфира</span></span>
+        <svg class="player__wave" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <line x1="2" y1="3" x2="2" y2="21"/><line x1="7" y1="3" x2="7" y2="21"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="17" y1="3" x2="17" y2="21"/><line x1="22" y1="3" x2="22" y2="21"/>
+        </svg>
+      </div>
+      <button class="player__sound glass-button" data-backdrop="dark" type="button" aria-pressed="false" aria-label="Звук песни">
+        <img class="player__icon-off" src="media/icons/volume-cross.svg" alt="" width="24" height="24" loading="lazy">
+        <img class="player__icon-on" src="media/icons/volume-high.svg" alt="" width="24" height="24" loading="lazy">
+      </button>
+      <audio src="media/optimized/audio/zemfira-progulka.mp3" loop muted preload="none" playsinline data-volume="0.3"></audio>
+    </div>
+    <img class="avatar-pop__photo" src="media/optimized/avatar-large-1x.webp" srcset="media/optimized/avatar-large-1x.webp 1x, media/optimized/avatar-large-2x.webp 2x" width="256" height="256" alt="Дарья Луговая" decoding="async" loading="lazy">
+  </dialog>
+
+  <nav class="site-menu" aria-label="Меню сайта">
+    <ul class="site-menu__group glass-button" data-glass-adapt>
+      <li><a class="site-menu__item" href="#cases">Кейсы</a></li>
+      <li class="site-menu__desktop" hidden data-mvp-hidden><a class="site-menu__item">Playground</a></li>
+      <li class="site-menu__desktop" hidden data-mvp-hidden><a class="site-menu__item" href="media/cv/darya-lugovaya-cv-ru.pdf" target="_blank" rel="noopener noreferrer">CV</a></li>
+      <li><a class="site-menu__item" href="https://t.me/lugovayadarya" target="_blank" rel="noopener noreferrer">Telegram</a></li>
+    </ul>
+    <a hidden data-mvp-hidden class="site-menu__group site-menu__group--pill site-menu__item site-menu__desktop glass-button" data-glass-adapt href="https://t.me/lugovayadarya" target="_blank" rel="noopener noreferrer">
+      <img src="media/icons/24_icon_telegram_stroke.svg" alt="" width="20" height="20">Telegram
+    </a>
+    <a class="site-menu__group site-menu__group--pill site-menu__item site-menu__cv-pill glass-button" data-glass-adapt href="media/cv/darya-lugovaya-cv-ru.pdf" target="_blank" rel="noopener noreferrer">
+      <img src="media/icons/20_icon_download_stroke.svg" alt="" width="20" height="20">CV
+    </a>
+    <button hidden data-mvp-hidden class="site-menu__more site-menu__mobile glass-button" data-glass-adapt type="button" aria-label="Ещё">
+      <img src="media/icons/24_hamburger_icon.svg" alt="" width="24" height="24">
+    </button>
+  </nav>
+  <script src="scripts/glass-backdrop.js?v=r3" defer></script>
+  <script src="scripts/card-face.js?v=r3" defer></script>
+  <script src="scripts/browser-scroll.js?v=r3" defer></script>
+  <script src="scripts/scroll-bend.js?v=r3" defer></script>
+  <script src="scripts/playground.js?v=r18" defer></script>
+  <script src="scripts/tumbleweed.js?v=r33" defer></script>
+  <script src="scripts/avatar-popup.js?v=r21" defer></script>
+  <script src="scripts/locked-cursor.js?v=r32" defer></script>
+</body>
+</html>

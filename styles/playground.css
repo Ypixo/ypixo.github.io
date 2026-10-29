@@ -1,0 +1,142 @@
+/*
+ * Playground — перекати-поле (главная, после кейсов). Отработано в previews/playground-sandbox/v4-tumbleweed.
+ * Референсы: docs/reference/main pg.png (4x от 1440), main pg-1.png (4x от 380).
+ * На подъезде к блоку фон всей страницы темнеет (scripts/playground.js: --pg-invert / --pg-ink-invert).
+ * Блок на весь экран: сверху по центру «Plày / Ground» (Text/32 Bold, на мобайле 28), ниже центра — видео
+ * перекати-поля (media/optimized/playground/tumbleweed.mp4, чёрный фон). Видео на десктопе — по ширине экрана,
+ * на мобайле — вдвое шире экрана, края обрезаются; цикл и плашка «Пока пусто» при наведении — scripts/tumbleweed.js.
+ * Чёрный фон видео ложится на тёмный фон сайта режимом наложения --tumble-blend (lighten).
+ * Блок последний на странице: меню лежит поверх тёмного блока внизу — нижний запас под меню у страницы убран.
+ * Размеры и положения — токены styles/tokens.css (группа Playground).
+ */
+:root {
+  --pg-invert: 0;                   /* состояние, пишет scripts/playground.js */
+  --pg-ink-invert: 0;
+  --page-bg: color-mix(in srgb, var(--color-bg-card-inverse) calc(var(--pg-invert) * 100%), var(--color-bg-page));
+  --page-ink: color-mix(in srgb, var(--color-bg-page) calc(var(--pg-ink-invert) * 100%), var(--color-text-primary));
+}
+
+html,
+body { background-color: var(--page-bg); }
+
+.page-end-space:has(> .playground) { padding-bottom: 0; }
+
+
+
+/* Блок на весь экран, во всю ширину окна (видео выходит за поля сетки) */
+.playground {
+  position: relative;
+  /* Полный экран, в т. ч. под полупрозрачные панели Safari (lvh): иначе на месте панели виден шов */
+  height: 100vh;
+  height: 100lvh;
+  min-height: 480px;
+  margin-top: var(--pg-gap-top);         /* от последней карточки до «Plày» — ровно --pg-cards-gap */
+  overflow: hidden;
+  pointer-events: none;                  /* на мобайле блок заходит под низ карточки — клики по ней не перекрываем;
+                                            наведение и тап по шару ловит scripts/tumbleweed.js на документе */
+  --pg-gap-top: var(--space-cases-gap);
+}
+@media (max-width: 767px) {
+  /* Мобайл: от низа последней карточки до верха «Plày» — 64 (решение пользователя), при этом в конце
+     страницы «Plày» по-прежнему в --pg-title-top от верха экрана: блок заходит вверх под карточку. */
+  .playground { --pg-gap-top: calc(var(--pg-cards-gap) - var(--pg-title-top)); }
+}
+
+.playground__title {
+  position: absolute;
+  z-index: 1;
+  top: var(--pg-title-top);
+  inset-inline: 0;
+  text-align: center;
+}
+.playground__play,
+.playground__ground { display: block; }
+.playground__play { color: var(--color-accent); }
+.playground__ground { color: var(--page-ink); }
+
+.tumble {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.tumble__video {
+  position: absolute;
+  top: var(--tumble-y);
+  left: 50%;
+  translate: -50% calc(-1 * var(--tumble-center));   /* по центру по горизонтали (края за экраном), шар — на --tumble-y */
+  display: block;
+  width: var(--tumble-width);
+  max-width: none;
+  height: auto;
+  aspect-ratio: 1920 / 820;
+  mix-blend-mode: var(--tumble-blend);
+  background: transparent;
+}
+
+
+/* Наведение на перекати-поле (мышь/трекпад): рядом с курсором — плашка «Пока пусто».
+   Как плашка «locked» у закрытых кейсов (media/icons/badge-locked.svg: 26 px, радиус 8, Icon/Primary,
+   белый текст), только без замочка; то же смещение от курсора (--locked-badge-offset-*). */
+.tumble-badge {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding-inline: var(--space-2);
+  margin: var(--locked-badge-offset-y) 0 0 var(--locked-badge-offset-x);
+  border-radius: 8px;
+  background: var(--color-icon-primary);
+  color: white;
+  font-size: var(--text-caption-size);
+  font-weight: var(--text-caption-weight);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--motion-duration-backdrop) var(--motion-ease-backdrop);
+  will-change: transform;
+}
+.tumble-badge.is-visible { opacity: 1; }
+/* У правого края экрана плашка не помещается справа — зеркально встаёт слева от курсора */
+.tumble-badge.is-flipped { translate: calc(-100% - 2 * var(--locked-badge-offset-x)) 0; }
+@media (prefers-reduced-motion: reduce) { .tumble-badge { transition: none; } }
+
+/* Тап по шару (тач): шар размывается, видео на паузе, по центру шара — «Пока пусто», надпись трясётся
+   (как «Оформляю» у закрытых кейсов). Референс docs/reference/main pg empty.png. Тайминги — токены
+   --motion-*-locked-*, логика — scripts/tumbleweed.js. */
+.tumble__video {
+  transition:
+    filter var(--motion-duration-locked-out) var(--motion-ease-backdrop),
+    opacity var(--tumble-fade) var(--motion-ease-backdrop);
+}
+/* Десктоп: пауза между проходами шара (scripts/tumbleweed.js) — видео погашено */
+.tumble.is-resting .tumble__video { opacity: 0; }
+.tumble.is-empty-reveal .tumble__video {
+  filter: blur(var(--tumble-empty-blur));
+  transition-duration: var(--motion-duration-locked-in);
+}
+.tumble__empty {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  translate: -50% -50%;
+  color: white;
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-medium-weight);
+  line-height: var(--text-body-line);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity var(--motion-duration-locked-out) var(--motion-ease-backdrop);
+}
+.tumble.is-empty-reveal .tumble__empty {
+  opacity: 1;
+  transition-duration: var(--motion-duration-locked-in);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tumble__video,
+  .tumble__empty { transition: none; }
+}

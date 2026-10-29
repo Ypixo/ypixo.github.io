@@ -1,0 +1,220 @@
+/*
+ * Поп-ап с большим аватаром (токены — styles/tokens.css, скрипт — scripts/avatar-popup.js).
+ * Референс docs/reference/avatar open.png (4x от 1440): фото-круг 256 по центру экрана на любой ширине,
+ * над ним — стеклянный крестик 44 с отступом 48. Фон под поп-апом размыт и затемнён
+ * (светлая страница → ≈ #575757: Card Inverse 70 % поверх размытия).
+ * Движение — scripts/avatar-popup.js: фото вырастает из маленького аватара (из нулевого размера) в центр экрана.
+ */
+
+/* Маленький аватар — кнопка: сброс стилей button, остальное — .hero__avatar */
+button.hero__avatar {
+  padding: 0;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+button.hero__avatar:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-text-primary);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Ховер: оранжевая точка едет по дуге кольца вправо-вниз — с «1:30» на «3 часа» (горизонталь через центр).
+   Поворот вокруг центра аватара: transform-origin — центр аватара в координатах самой точки. */
+.hero__avatar::after {
+  transform-origin:
+    calc(var(--avatar-dot-inset) + var(--avatar-dot) - var(--avatar-size) / 2)
+    calc(var(--avatar-size) / 2 - var(--avatar-dot-inset));
+  transition: rotate var(--motion-duration-avatar-dot) var(--motion-ease-avatar);
+}
+@media (hover: hover) {
+  .hero__avatar:hover::after { rotate: 45deg; }
+}
+.hero__avatar:focus-visible::after { rotate: 45deg; }
+
+/* Поп-ап: <dialog> на весь экран, своя подложка вместо ::backdrop */
+.avatar-pop {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: hidden;
+  /* Фото уменьшается на низких экранах (телефон горизонтально): над ним крестик 44 + 48, под ним 32 + плеер 64,
+     фото по центру — ему остаётся высота окна минус 2 × (96 + поле 16). */
+  --pop-size: min(var(--avatar-pop-size), 100vh - 224px);
+  --pop-size: min(var(--avatar-pop-size), 100svh - 224px);
+}
+.avatar-pop::backdrop { background: transparent; }
+.avatar-pop:focus { outline: none; }   /* фокус на самом поп-апе при открытии тапом/мышью — без рамки */
+html:has(.avatar-pop[open]) { overflow: hidden; }   /* страница под поп-апом не скроллится */
+/* Старый Safari на iPhone красит панели (статус-бар, нижнюю панель) по фону «холста» страницы, а не по theme-color.
+   Пока открыт поп-ап, холст — цвета затемнения. Фон body свой, поэтому сама страница под затемнением не меняется. */
+html:has(.avatar-pop[open]) { background-color: #575757; }
+
+.avatar-pop__veil {
+  /* На весь «большой» экран, в т. ч. под панели Safari (иначе сверху и снизу видны белые полосы):
+     fixed + 100lvh, контент поп-апа при этом остаётся по центру видимой области. */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100lvh;
+  background: rgb(23 23 23 / 0.7);       /* фолбэк без color-mix (Safari < 16.2, Firefox < 113) */
+  background: color-mix(in srgb, var(--color-bg-card-inverse) var(--avatar-pop-tint), transparent);
+  backdrop-filter: blur(var(--avatar-pop-blur));
+  -webkit-backdrop-filter: blur(var(--avatar-pop-blur));
+}
+
+.avatar-pop__photo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--pop-size);
+  height: var(--pop-size);
+  margin: calc(var(--pop-size) / -2) 0 0 calc(var(--pop-size) / -2);
+  border-radius: var(--radius-full);
+  object-fit: cover;
+}
+
+.avatar-pop__close {
+  position: absolute;
+  top: calc(50% - var(--pop-size) / 2 - var(--avatar-pop-gap) - var(--size-control));
+  left: 50%;
+  margin-left: calc(var(--size-control) / -2);
+  display: grid;
+  place-items: center;
+  width: var(--size-control);
+  height: var(--size-control);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+.avatar-pop__close img { width: var(--size-icon); height: var(--size-icon); }
+.avatar-pop__close:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-text-on-inverse);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ── Плеер под фото (референсы avatar open.png / open avatar mobile.png, 4x) ──
+   Пилюля 192×64 (обложка-круг 48, название, исполнитель, оранжевая «волна») + круглая кнопка звука 64,
+   между ними 8; от фото — 32. Стекло — тёмный вариант .glass-button. */
+
+.avatar-pop__player {
+  position: absolute;
+  top: calc(50% + var(--pop-size) / 2 + var(--player-gap));
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  gap: var(--space-2);
+}
+
+.player {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: var(--player-width);
+  height: var(--player-height);
+  padding: var(--space-2) var(--space-4) var(--space-2) var(--space-2);
+  border-radius: var(--radius-full);
+}
+.player__cover {
+  flex: none;
+  width: var(--player-cover);
+  height: var(--player-cover);
+  border-radius: var(--radius-full);
+  object-fit: cover;
+}
+.glass-button[data-backdrop="dark"] img.player__cover { filter: none; }   /* обложку не подсвечиваем, как иконки */
+
+/* Цвета плеера — значения из референса (avatar open.png, поверх фона #575757), не токены ДС (решение пользователя):
+   стекло — сверху чуть темнее фона, книзу светлее; тонкий светлый кант; название #DEDEDE, исполнитель #919191,
+   иконка звука #DFDFDF. Слои тени .glass-button здесь не нужны. */
+.player,
+.player__sound {
+  background-image: linear-gradient(to bottom, rgb(0 0 0 / 0.09), rgb(255 255 255 / 0.04) 50%, rgb(255 255 255 / 0.15));
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.3);
+}
+.player::before, .player::after,
+.player__sound::before, .player__sound::after { display: none; }
+.glass-button[data-backdrop="dark"].player__sound img { filter: none; }
+.player__text {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+}
+.player__title {
+  font-size: var(--text-body-size);
+  line-height: 20px;
+  color: #dedede;
+}
+.player__artist {
+  font-size: var(--text-caption-size);
+  line-height: 18px;
+  color: #919191;
+}
+.player__title, .player__artist { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* «Волна» — 5 оранжевых палочек (media/icons/soundwave.svg). В покое — форма иконки;
+   пока песня играет (даже без звука) — палочки прыгают, как эквалайзер в плеерах. */
+.player__wave {
+  flex: none;
+  width: var(--size-icon);
+  height: var(--size-icon);
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  overflow: visible;
+}
+.player__wave line {
+  transform-box: fill-box;
+  transform-origin: center;
+  vector-effect: non-scaling-stroke;      /* скругления концов не сплющиваются при масштабе */
+  transform: scaleY(var(--rest));
+  transition: transform 300ms var(--motion-ease-avatar);
+}
+.player__wave line:nth-child(1), .player__wave line:nth-child(5) { --rest: 0.11; }
+.player__wave line:nth-child(2), .player__wave line:nth-child(4) { --rest: 0.55; }
+.player__wave line:nth-child(3) { --rest: 1; }
+.player.is-playing .player__wave line { animation: wave-1 900ms ease-in-out infinite alternate; }
+.player.is-playing .player__wave line:nth-child(2) { animation-name: wave-2; animation-duration: 1100ms; }
+.player.is-playing .player__wave line:nth-child(3) { animation-name: wave-3; animation-duration: 1000ms; }
+.player.is-playing .player__wave line:nth-child(4) { animation-name: wave-4; animation-duration: 1200ms; }
+.player.is-playing .player__wave line:nth-child(5) { animation-name: wave-1; animation-duration: 800ms; animation-delay: -300ms; }
+@keyframes wave-1 { 0% { transform: scaleY(0.11); } 50% { transform: scaleY(0.45); } 100% { transform: scaleY(0.2); } }
+@keyframes wave-2 { 0% { transform: scaleY(0.55); } 35% { transform: scaleY(0.25); } 70% { transform: scaleY(0.9); } 100% { transform: scaleY(0.4); } }
+@keyframes wave-3 { 0% { transform: scaleY(1); } 30% { transform: scaleY(0.45); } 65% { transform: scaleY(0.8); } 100% { transform: scaleY(0.35); } }
+@keyframes wave-4 { 0% { transform: scaleY(0.55); } 40% { transform: scaleY(0.9); } 75% { transform: scaleY(0.3); } 100% { transform: scaleY(0.7); } }
+
+/* Кнопка звука: по умолчанию звук выключен (перечёркнутый динамик), включён — динамик с волнами;
+   меняется только иконка. Стекло светлеет (белая подсветка) только при наведении. */
+.player__sound {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--player-height);
+  height: var(--player-height);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: background-color 250ms var(--motion-ease-avatar);
+}
+.player__sound img { grid-area: 1 / 1; width: var(--size-icon); height: var(--size-icon); }
+.player__sound .player__icon-on { opacity: 0; }
+@media (hover: hover) {
+  .player__sound:hover { background-color: rgb(255 255 255 / 0.14); }
+}
+.player__sound[aria-pressed="true"] .player__icon-on { opacity: 1; }
+.player__sound[aria-pressed="true"] .player__icon-off { opacity: 0; }
+.player__sound:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-text-on-inverse);
+  outline-offset: var(--focus-ring-offset);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .player.is-playing .player__wave line { animation: none; }
+}

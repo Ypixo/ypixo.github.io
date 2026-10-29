@@ -1,0 +1,346 @@
+/*
+ * Portfolio — главная страница.
+ * Токены и .grid — styles/tokens.css. Сетка и масштабирование — docs/grid.md.
+ * Горизонталь — только колоночные линии; вертикальные отступы — px из макета.
+ */
+
+/* Сброс, фон и текстовые стили — styles/base.css; лейбл, меню — styles/components.css */
+
+/* ═════════════ Hero ═════════════
+ * Figma: Main page 142:965 / Main page mobile 120:43641.
+ * Навигация стоит на сетке и тянется вместе с ней.
+ * Имя + аватар + подзаголовок — единая композиция фиксированной ширины
+ * (как в макете: 438 на 1440, 348 на 380), по центру страницы.
+ * Она не растягивается по колонкам, чтобы элементы не разъезжались.
+ */
+.hero {
+  /* Вертикальные отступы из макета (px), 1440 / 380 */
+  --hero-top: var(--space-2);   /* нав сверху: 8 */
+  --hero-title-gap: var(--space-hero-intro); /* низ нава (29) → верх аватара (91) */
+  --hero-lead-gap: 15px;        /* низ аватара (147) → подзаголовок (162), как в макете: иначе всё ниже съезжает на 1px */
+  --hero-bottom: var(--space-section); /* подзаголовок → первая карточка */
+  --hero-intro-width: 438px;    /* 4 колонки макета 1440: 501 → 939 */
+  --avatar-size: 56px;
+  --avatar-photo: 48px;
+  --avatar-dot: 12px;
+  --avatar-dot-inset: 3px;
+
+  padding-top: var(--hero-top);
+  padding-bottom: var(--hero-bottom);
+}
+
+/* Навигация «UX · UI · AI» — 142:975 / 142:977 / 142:976 */
+.hero__tags { color: var(--color-text-secondary); }
+.hero__tag { grid-row: 1; }
+.hero__tag--ux { grid-column: 1; }
+.hero__tag--ai { grid-column: -2; justify-self: end; }
+/* UI — над началом композиции, на одной оси с именем (как в макете: x 501) */
+.hero__tag--ui {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-left: calc((100% - var(--hero-intro-width)) / 2);
+}
+
+/* Композиция: имя + аватар + подзаголовок */
+.hero__intro {
+  width: min(var(--hero-intro-width), 100% - 2 * var(--grid-margin));
+  margin: var(--hero-title-gap) auto 0;
+}
+
+/* Имя + аватар — 142:973 / 142:1112 */
+.hero__id {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5); /* 20: аватар x=658 при конце имени ≈638 */
+}
+
+.hero__name {
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.hero__avatar {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  border-radius: var(--radius-full);
+  /* Кольцо-стекло: белый 34% + Figma Glass (CSS-приближение, см. tokens.css) */
+  background: var(--glass-fill);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-edge);
+}
+
+.hero__avatar img {
+  width: var(--avatar-photo);
+  height: var(--avatar-photo);
+  border-radius: var(--radius-full);
+  object-fit: cover;
+}
+
+/* Оранжевая точка — Ellipse 2001 */
+.hero__avatar::after {
+  content: "";
+  position: absolute;
+  top: var(--avatar-dot-inset);
+  right: var(--avatar-dot-inset);
+  width: var(--avatar-dot);
+  height: var(--avatar-dot);
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+}
+
+/* Подзаголовок — 142:974. Вправо по краю композиции. */
+.hero__lead {
+  margin-top: var(--hero-lead-gap);
+  text-align: right;
+  color: var(--color-text-primary);
+}
+
+/* ═════════════ Кейсы ═════════════
+ * Figma: Main page 142:965 (карточки 1344×840) / Main page mobile 120:43641 (348×760).
+ * Карточка — во всю ширину сетки, высота из пропорции макета (docs/grid.md).
+ * Содержимое фиксированное: лого — слева сверху, теги — справа сверху,
+ * текст — слева снизу. Обложки — по высоте карточки, под текстом (см. .case__cover).
+ */
+.cases { row-gap: var(--space-cases-gap); }
+
+.case {
+  position: relative;          /* опора для обложки (.case__cover) */
+  isolation: isolate;          /* своя стопка слоёв: обложка с z-index −1 остаётся над фоном карточки */
+  grid-column: 1 / -1;
+  /* Пропорция макета, но не выше окна: сверху и снизу остаются поля
+     --space-viewport-y. Ширина всегда во всю сетку. */
+  width: 100%;
+  aspect-ratio: 1344 / 840;
+  max-height: calc(100vh - 2 * var(--space-viewport-y));
+  max-height: calc(100svh - 2 * var(--space-viewport-y));
+  min-height: var(--size-case-min-height);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr auto;
+  padding: var(--space-card-padding);
+  border-radius: var(--radius-card);
+  background: var(--color-bg-card);
+  --case-title: var(--color-text-primary);
+  --case-desc: var(--color-text-secondary-dark);
+}
+
+/* Тёмная карточка: заголовок On Inverse, описание Text/Secondary (сверено по эталону) */
+.case--inverse {
+  background: var(--color-bg-card-inverse);
+  --case-title: var(--color-text-on-inverse);
+  --case-desc: var(--color-text-secondary);
+}
+
+.case__logo {
+  grid-area: 1 / 1;
+  width: var(--size-card-logo);
+  height: var(--size-card-logo);
+}
+
+/* Лейблы-пилюли — .label (styles/components.css) */
+.case__tags {
+  grid-area: 1 / 2;
+  justify-self: end;
+  align-self: start;
+  display: flex;
+  gap: var(--space-3);
+}
+
+/* Обложка (.case__cover, z-index −1 внутри .case с isolation) рисуется под текстом: на очень низких экранах телефон не перекрывает заголовок */
+.case__text { grid-area: 3 / 1 / 4 / -1; }
+
+/* Обложка Digital Card: мокап телефона по высоте карточки, центр — как в эталоне (docs/reference, 4x):
+ *   1440: карточка 1344×840, телефон 320.5×655, сверху 93, по центру по горизонтали;
+ *   380:  карточка 348×760,  телефон 252×514.75, сверху 105.
+ * Карточка ограничена высотой окна — телефон уменьшается вместе с ней и не обрезается.
+ * Обложка — под ссылкой карточки (.case__link::after) и не ловит клики. */
+.case__cover {
+  position: absolute;
+  z-index: -1;                 /* под текстом карточки; .case — isolation: isolate, поэтому над её фоном */
+  top: calc(93 / 840 * 100%);
+  height: calc(655 / 840 * 100%);
+  left: 50%;
+  aspect-ratio: 320 / 654;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.case__mockup { width: 100%; height: 100%; }
+
+/* Обложки Design System и m10 Web Redesign — так же по высоте карточки, место и размер — доли карточки
+ * из эталона (docs/reference, 4x). По горизонтали — сдвиг левого края от центра карточки в % ширины
+ * обложки, поэтому в карточке, ограниченной высотой окна, композиция остаётся по центру, как у Digital Card.
+ *   Design System, 1440: панель + плашка Development 865 × 579 (исходник 1298×869), x 348, y 130;
+ *                  380:  274 × 460 (исходник 411×690), x 49, y 137.
+ *   Web Redesign,  1440: рамка Safari 855 × 607.3 (исходник 2565×1822), x 245, y 117 — внутри живой скролл
+ *                         сайта (scripts/browser-scroll.js);
+ *                  380:  iPhone с сайтом 252 × 514.75 (исходник 756×1545), y 105, по центру — статично. */
+.case__cover--ds {
+  top: calc(130 / 840 * 100%);
+  height: calc(579.1 / 840 * 100%);
+  aspect-ratio: 1298 / 869;
+  transform: translateX(calc(-324 / 865 * 100%));
+}
+.case__cover--web {
+  top: calc(117 / 840 * 100%);
+  height: calc(607.3 / 840 * 100%);
+  aspect-ratio: 2565 / 1822;
+  transform: translateX(calc(-427 / 855 * 100%));
+}
+.case__cover-img { display: block; width: 100%; height: 100%; }
+.case__cover--web .case__cover-img { display: none; } /* iPhone — только на мобайле */
+
+/* Окно браузера со страницей сайта. Рамка Safari (PNG, область страницы прозрачная, сверху тень тулбара)
+ * лежит поверх окна. Окно — по прозрачной области рамки (пиксели исходника 2565×1822):
+ * x 21…2544, y 112…1800, нижние углы скруглены ≈ 48 px исходника (их же закрывает рамка). */
+.browser-scroll {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.browser-scroll__window {
+  position: absolute;
+  left: calc(21 / 2565 * 100%);
+  top: calc(112 / 1822 * 100%);
+  width: calc(2523 / 2565 * 100%);
+  height: calc(1688 / 1822 * 100%);
+  overflow: hidden;
+  border-radius: 0 0 calc(48 / 2523 * 100%) calc(48 / 2523 * 100%) / 0 0 calc(48 / 1688 * 100%) calc(48 / 1688 * 100%);
+  background: var(--page-bg);      /* фон сайта — виден, пока грузится первый тайл */
+}
+/* Страница сайта: пропорция длинной картинки (--page-w × --page-h, пиксели исходника), скролл — transform.
+ * Тайлы — по строкам исходника (--y, --h), с перекрытием: следующий тайл закрывает шов предыдущего. */
+.browser-scroll__page {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--page-w) / var(--page-h);
+}
+/* «Резинка» у низа: под страницей — цвет футера сайта, как фон страницы в Safari при перетягивании */
+.browser-scroll__page::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 10%;
+  background: var(--page-end);
+}
+.browser-scroll__tile {
+  position: absolute;
+  left: 0;
+  top: calc(var(--y) / var(--page-h) * 100%);
+  width: 100%;
+  height: calc(var(--h) / var(--page-h) * 100%);
+}
+.browser-scroll__frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Лицо карты на мокапе — .card-face в components.css (общее с кейсом Digital Card) */
+.case__title { color: var(--case-title); }
+
+/* Карточка-ссылка: ссылка в заголовке растянута на всю карточку.
+   Якорь #cases: при переходе карточка встаёт с полем --space-viewport-y сверху. */
+.cases { scroll-margin-top: var(--space-viewport-y); }
+.case--link { position: relative; }
+.case__link {
+  color: inherit;
+  text-decoration: none;
+}
+.case__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.case__link:focus-visible { outline: none; }
+.case--link:has(.case__link:focus-visible) {
+  outline: var(--focus-ring-width) solid var(--color-text-primary);
+  outline-offset: var(--focus-ring-offset);
+}
+.case__desc {
+  margin-top: var(--space-2);
+  color: var(--case-desc);
+}
+
+.br-mobile { display: none; }
+
+/* < 768: раскладка «Main page mobile» (380) */
+@media (max-width: 767px) {
+  .hero {
+    --hero-top: var(--space-4);   /* 16 */
+    --hero-lead-gap: var(--space-4); /* 16 */
+    --hero-intro-width: 348px;    /* вся ширина макета 380 */
+    --avatar-size: 48px;
+    --avatar-photo: calc(var(--avatar-size) * 6 / 7); /* 41.14 в макете */
+    --avatar-dot: 10px;           /* 120:43650: точка 10 */
+  }
+
+  .hero__tag--ui { grid-column: 3; margin-left: 0; } /* 120:43647: колонка 3 */
+
+  .case { aspect-ratio: 348 / 760; }
+  .case__cover {
+    top: calc(105 / 760 * 100%);
+    height: calc(514.75 / 760 * 100%);
+  }
+  .case__cover--ds {
+    top: calc(137 / 760 * 100%);
+    height: calc(460 / 760 * 100%);
+    aspect-ratio: 411 / 690;
+    transform: translateX(calc(-125 / 274 * 100%));
+  }
+  /* Web Redesign на мобайле — статичная картинка iPhone с сайтом (как телефон Digital Card: 252 × 514.75, y 105,
+     по центру); окно браузера и его тайлы не показываются и не грузятся. */
+  .case__cover--web {
+    top: calc(105 / 760 * 100%);
+    height: calc(514.75 / 760 * 100%);
+    aspect-ratio: 756 / 1545;
+    transform: translateX(-50%);
+  }
+  .case__cover--web .case__cover-img { display: block; }
+  .case__cover--web .browser-scroll { display: none; }
+  .case__tag--desktop { display: none; } /* Design System: на мобайле один тег */
+  .br-mobile { display: inline; }
+  .br-desktop { display: none; }
+
+  /* Имя слева, аватар по центру композиции */
+  .hero__id {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+  }
+}
+
+/* Карточки кейсов при открытии страницы выезжают под углом (scripts/page-transition.js, [data-reveal-rise]):
+   повёрнутые углы не должны давать горизонтальную прокрутку. clip, а не hidden — вертикаль и sticky не трогает. */
+main { overflow-x: clip; }
+
+/* Изгиб карточек при скролле (scripts/scroll-bend.js): гнётся только подложка. Фон самой карточки
+   не меняется (glass-backdrop.js читает цвет с него), слой ::before того же цвета выступает за боковые
+   края по форме общей дуги (clip-path: path()). Контент не деформируется и не обрезается. */
+.case[data-scroll-bend]::before {
+  content: "";
+  position: absolute;
+  z-index: -2;                 /* над фоном карточки, под обложкой (−1) и текстом */
+  inset: 0 calc(-1 * var(--motion-bend-max));
+  background: inherit;
+  clip-path: var(--bend-path, none);
+  pointer-events: none;
+  visibility: hidden;
+}
+.case[data-scroll-bend].is-bending::before { visibility: visible; }
+
+/* Фокус карточки без :has() (Firefox < 121, Safari < 15.4): кольцо рисует растянутая ссылка */
+@supports not selector(:has(*)) {
+  .case__link:focus-visible::after {
+    outline: var(--focus-ring-width) solid var(--color-text-primary);
+    outline-offset: var(--focus-ring-offset);
+  }
+}

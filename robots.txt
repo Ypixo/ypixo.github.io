@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lugovayadarya.ru/sitemap.xml

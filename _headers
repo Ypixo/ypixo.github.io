@@ -1,0 +1,10 @@
+# Netlify: кэш. HTML — по умолчанию Netlify всегда свежий; CSS/JS (с ?v=… в ссылках) — день; медиа и шрифты — неделя.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+/styles/*
+  Cache-Control: public, max-age=86400
+/scripts/*
+  Cache-Control: public, max-age=86400
+/media/*
+  Cache-Control: public, max-age=604800

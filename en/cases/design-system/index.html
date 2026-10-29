@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Design System&nbsp;— Darya L.</title>
+  <meta name="description" content="How I evolved the m10 design system: an audit of two libraries, readiness statuses in Figma, slots instead of detach, screen templates, and syncs with the frontend—90% of components are now in the developers’ UI kit.">
+  <link rel="canonical" href="https://lugovayadarya.ru/en/cases/design-system/">
+  <link rel="alternate" hreflang="ru" href="https://lugovayadarya.ru/cases/design-system/">
+  <link rel="alternate" hreflang="en" href="https://lugovayadarya.ru/en/cases/design-system/">
+  <link rel="alternate" hreflang="x-default" href="https://lugovayadarya.ru/cases/design-system/">
+  <meta name="theme-color" content="#f3f3f3">
+  <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../../../favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="ru_RU">
+  <meta property="og:site_name" content="Darya L.">
+  <meta property="og:title" content="Design System — a case study by Darya L.">
+  <meta property="og:description" content="How I evolved the m10 design system: an audit of two libraries, readiness statuses in Figma, slots instead of detach, screen templates, and syncs with the frontend—90% of components are now in the developers’ UI kit.">
+  <meta property="og:url" content="https://lugovayadarya.ru/en/cases/design-system/">
+  <meta property="og:image" content="https://lugovayadarya.ru/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Darya L. — Product designer, 5+ years of experience, B2C, fintech, crypto">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="../../../media/fonts/suisse-intl-book.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../../media/fonts/suisse-intl-medium.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../../../media/fonts/suisse-intl-bold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../../styles/tokens.css?v=r31">
+  <link rel="stylesheet" href="../../../styles/base.css?v=r4">
+  <link rel="stylesheet" href="../../../styles/components.css?v=r32">
+  <link rel="stylesheet" href="../../../styles/case.css?v=r29">
+  <link rel="stylesheet" href="../../../styles/page-transitions.css?v=r9">
+  <link rel="stylesheet" href="../../../styles/link-roll.css?v=r4">
+  <!-- Переходы между страницами: первый кадр — когда заголовок уже разобран (его строки собирает page-transition.js) -->
+  <link rel="expect" href="#page-title" blocking="render">
+  <script src="../../../scripts/page-transition.js?v=r9" blocking="render"></script>
+  <script src="../../../scripts/link-roll.js?v=r4" defer></script>
+  <script src="../../../scripts/reading-progress.js?v=r4" defer></script>
+  <script src="../../../scripts/compare.js?v=r26" defer></script>
+  <script src="../../../scripts/glass-backdrop.js?v=r4" defer></script>
+</head>
+<body>
+  <!-- Кейс Design System. Референс docs/reference/ds case.png (×3.3646 от 1440); мобильная раскладка — как у кейса
+       Digital Card (мобильного референса нет), мобильные картинки — media/ds-case/mobile. -->
+
+  <!-- Контролы: «Назад» слева, прогресс прочтения справа. Десктоп — fixed; мобайл — едут со страницей и прилипают в 16 px от верха -->
+  <div class="case-controls">
+  <a class="case-back glass-button" data-glass-adapt href="../../" data-vt-back aria-label="Back to the home page">
+    <img src="../../../media/icons/chevron-left.svg" alt="" width="24" height="24">
+  </a>
+  <svg class="case-progress" data-glass-adapt viewBox="0 0 40 40" aria-hidden="true">
+    <circle class="case-progress__track" cx="20" cy="20" r="16.5" />
+    <circle class="case-progress__arc" cx="20" cy="20" r="16.5" pathLength="100" />
+  </svg>
+  </div>
+
+  <header class="case-head">
+    <div class="case-meta grid t-caption">
+      <span class="case-meta__crumb">/</span>
+      <span class="case-meta__time">8&nbsp;mins</span>
+      <span class="case-meta__year">2026</span>
+    </div>
+  </header>
+
+  <main class="case-page grid page-end-space">
+    <article class="case-body">
+      <h1 class="case-title case-title--long t-heading" id="page-title" data-reveal-lines>Evolving the design system<span class="case-title__extra"> at&nbsp;m10</span></h1>
+
+      <p class="case-intro">I joined the m10 team during the move to a new design system. New in every sense: a new library in <span class="nowrap"><img class="text-icon" src="../../../media/text-icons/icon_figma.svg" alt="" width="18" height="18"> Figma,</span> updated components, tokens, and rules that were meant to bring the interfaces in line with a unified brand style.</p>
+      <p>The move wasn’t finished yet. Designers worked with two libraries at once—the old one and the new one—mixed their components, and often resorted to <span class="nowrap"><img class="text-icon" src="../../../media/text-icons/icon_detach.svg" alt="" width="18" height="18"> detach</span> when components lacked the settings they needed. The frontend also had old and new components side by side, but it wasn’t always clear what was already implemented in code and what wasn’t.</p>
+      <!-- Сравнение «до/после» (scripts/compare.js, стили — .compare в components.css): сверху «Дизайн в Figma»,
+           под ним «Выход в прод»; ползунок двигает границу. По умолчанию — 60 %: виден телефон из Figma и краешек прода.
+           До 479 px — мобильные картинки (media/ds-case/mobile: figma-design-phone, prod-release-phone). -->
+      <div class="case-media compare" data-compare style="--media-h: 547; --media-h-mobile: 675; --compare-pos: 60%">
+        <picture class="compare__img">
+          <source media="(max-width: 479px)" srcset="../../../media/optimized/en/ds-case/mobile/prod-release-phone-1x.webp 1x, ../../../media/optimized/en/ds-case/mobile/prod-release-phone-2x.webp 2x" width="390" height="756">
+          <img src="../../../media/optimized/en/ds-case/prod-release-phone-1x.webp" srcset="../../../media/optimized/en/ds-case/prod-release-phone-1x.webp 1x, ../../../media/optimized/en/ds-case/prod-release-phone-2x.webp 2x" width="680" height="547" alt="The same transfer screen after the release to production" decoding="async">
+        </picture>
+        <picture class="compare__img compare__img--top">
+          <source media="(max-width: 479px)" srcset="../../../media/optimized/en/ds-case/mobile/figma-design-phone-1x.webp 1x, ../../../media/optimized/en/ds-case/mobile/figma-design-phone-2x.webp 2x" width="390" height="756">
+          <img src="../../../media/optimized/en/ds-case/figma-design-phone-1x.webp" srcset="../../../media/optimized/en/ds-case/figma-design-phone-1x.webp 1x, ../../../media/optimized/en/ds-case/figma-design-phone-2x.webp 2x" width="680" height="547" alt="Transfer screen in Figma" decoding="async">
+        </picture>
+        <div class="compare__handle" role="slider" tabindex="0" aria-label="Comparison: design in Figma and release to production" aria-valuemin="0" aria-valuemax="100" aria-valuenow="60">
+          <span class="compare__knob" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M9 7l-4 5 4 5M15 7l4 5-4 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+      </div>
+
+      <h2 class="case-h">My role</h2>
+      <p>I took on the further development of the DS alongside my product tasks. The goal wasn’t just to extend the library, but to help the team move to it completely in Figma, while developers gradually brought the new UI into the app.</p>
+      <ul class="case-tags" aria-label="Tags">
+        <li class="label">UI Architecture</li>
+        <li class="label">Scalability</li>
+        <li class="label">Cross-functional</li>
+      </ul>
+
+      <h2 class="case-h">01&nbsp;/ Design system audit</h2>
+      <p>First, I <span class="nowrap">audited <img class="text-icon" src="../../../media/text-icons/icon_search.svg" alt="" width="18" height="18"></span> the old and new libraries, reviewed the app’s UI, and collected designers’ requests. I needed to understand which components were missing, which ones should be migrated or updated, and what kept designers from using the existing ones without detach.</p>
+      <p>Separately, I met with the frontend <span class="nowrap">team <img class="text-icon" src="../../../media/text-icons/icon_dev.svg" alt="" width="18" height="18"></span> to compare the Figma library with the code. It turned out that some of the new components were already in the shared UI kit, some were used in the product but hadn’t made it into the developers’ library yet, and the rest were waiting to be implemented.</p>
+      <picture class="case-media">
+        <source media="(max-width: 479px)" srcset="../../../media/optimized/ds-case/mobile/backlog-statuses-1x.webp 1x, ../../../media/optimized/ds-case/mobile/backlog-statuses-2x.webp 2x" width="390" height="461">
+        <img src="../../../media/optimized/ds-case/backlog-statuses-1x.webp" srcset="../../../media/optimized/ds-case/backlog-statuses-1x.webp 1x, ../../../media/optimized/ds-case/backlog-statuses-2x.webp 2x" width="680" height="200" alt="Backlog statuses: Backlog, Design, Development, Done" loading="lazy" decoding="async">
+      </picture>
+      <p>After the audit, I put together a backlog and set up statuses right in Figma:</p>
+      <ul class="case-list">
+        <li>Ready in design and code</li>
+        <li>Ready in design, waiting for development</li>
+        <li>In progress with designers</li>
+      </ul>
+      <picture class="case-media">
+        <source media="(max-width: 479px)" srcset="../../../media/optimized/ds-case/mobile/components-statuses-1x.webp 1x, ../../../media/optimized/ds-case/mobile/components-statuses-2x.webp 2x" width="390" height="256">
+        <img src="../../../media/optimized/ds-case/components-statuses-1x.webp" srcset="../../../media/optimized/ds-case/components-statuses-1x.webp 1x, ../../../media/optimized/ds-case/components-statuses-2x.webp 2x" width="680" height="429" alt="The Components page in Figma and a list of components with readiness statuses" loading="lazy" decoding="async">
+      </picture>
+
+      <p>Now the library showed not only which components existed, but also what stage each of them was at.</p>
+      <p>Along the way, I <span class="nowrap">cleaned&nbsp;up <img class="text-icon" src="../../../media/text-icons/icon_brush.svg" alt="" width="18" height="18"></span> the file structure and introduced basic rules for organizing it. No extensive documentation—at this stage, it was more important to make the library clear and convenient for everyday work.</p>
+      <picture class="case-media">
+        <source media="(max-width: 479px)" srcset="../../../media/optimized/ds-case/mobile/buttons-component-1x.webp 1x, ../../../media/optimized/ds-case/mobile/buttons-component-2x.webp 2x" width="390" height="256">
+        <img src="../../../media/optimized/ds-case/buttons-component-1x.webp" srcset="../../../media/optimized/ds-case/buttons-component-1x.webp 1x, ../../../media/optimized/ds-case/buttons-component-2x.webp 2x" width="680" height="429" alt="The Buttons page in the library: Button and Icon button components" loading="lazy" decoding="async">
+      </picture>
+
+      <p>We agreed to build new flows only with the new DS. As the components improved, the need to go back to the old library disappeared, and the team dropped it completely.</p>
+
+      <h2 class="case-h">02&nbsp;/ That pesky detach</h2>
+      <p>One of the most common problems designers pointed out was <span class="nowrap"><img class="text-icon" src="../../../media/text-icons/icon_detach.svg" alt="" width="18" height="18"> detach.</span> Sometimes a component existed but couldn’t be configured for the task at hand. Designers had to detach it from the library and lose all future updates along with it.</p>
+      <picture class="case-media">
+        <source media="(max-width: 479px)" srcset="../../../media/optimized/ds-case/mobile/detach-instance-1x.webp 1x, ../../../media/optimized/ds-case/mobile/detach-instance-2x.webp 2x" width="390" height="379">
+        <img src="../../../media/optimized/ds-case/detach-instance-1x.webp" srcset="../../../media/optimized/ds-case/detach-instance-1x.webp 1x, ../../../media/optimized/ds-case/detach-instance-2x.webp 2x" width="680" height="429" alt="A transfer cell and the Figma context menu with Detach instance" loading="lazy" decoding="async">
+      </picture>
+
+      <p>Based on the audit, I added missing components, variants, and states. But it was just as important to rethink the structure of the ones the team already used every day.</p>
+      <p>When <span class="nowrap">slots <img class="text-icon" src="../../../media/text-icons/icon_slot.svg" alt="" width="18" height="18"></span> came to Figma, I started trying them in components that designers often had to detach. At the same time, it was important not to turn every element into a free-for-all builder with no rules.</p>
+      <p>A good example is list cells. Previously, to add a non-standard provider logo or an action on the right, you had to detach the cell from the <span class="nowrap">library <img class="text-icon" src="../../../media/text-icons/icon_library.svg" alt="" width="18" height="18">.</span> With slots, you can replace just the part you need without touching the rest of the structure.</p>
+      <picture class="case-media">
+        <source media="(max-width: 479px)" srcset="../../../media/optimized/ds-case/mobile/list-cell-slot-1x.webp 1x, ../../../media/optimized/ds-case/mobile/list-cell-slot-2x.webp 2x" width="390" height="377">
+        <img src="../../../media/optimized/ds-case/list-cell-slot-1x.webp" srcset="../../../media/optimized/ds-case/list-cell-slot-1x.webp 1x, ../../../media/optimized/ds-case/list-cell-slot-2x.webp 2x" width="680" height="429" alt="A McDonald’s list cell: the logo replaced with a slot, and the slot content picker next to it" loading="lazy" decoding="async">
+      </picture>
+
+      <p>In the same way, I improved the bottom sheet: its content can be adapted to a specific scenario while the base of the component stays intact.</p>
+      <p>This gave us more flexibility without having to build our own version of an element every time.</p>
+      <picture class="case-media">
+        <source media="(max-width: 479px)" srcset="../../../media/optimized/ds-case/mobile/bottom-sheet-slot-1x.webp 1x, ../../../media/optimized/ds-case/mobile/bottom-sheet-slot-2x.webp 2x" width="390" height="583">
+        <img src="../../../media/optimized/ds-case/bottom-sheet-slot-1x.webp" srcset="../../../media/optimized/ds-case/bottom-sheet-slot-1x.webp 1x, ../../../media/optimized/ds-case/bottom-sheet-slot-2x.webp 2x" width="680" height="429" alt="A bottom sheet with a slot for content" loading="lazy" decoding="async">
+      </picture>
+
+      <h2 class="case-h">03&nbsp;/ If a screen repeats, it needs a template too</h2>
+      <p>The consistency problem wasn’t limited to individual components.</p>
+      <p>For example, the app had several visually different versions of the same <span class="nowrap"><img class="text-icon" src="../../../media/text-icons/icon_error.svg" alt="" width="18" height="18"> error</span> screen. Each designer built it from scratch: the spacing changed here, the illustration position there, and sometimes the whole layout.</p>
+      <p>We started adding templates of recurring pages to the library—errors and empty states first.</p>
+      <p>We set these pages up as components. Slots let you change illustrations and content, while the layout stays <span class="nowrap">shared <img class="text-icon" src="../../../media/text-icons/icon_check.svg" alt="" width="18" height="18"></span> across all flows.</p>
+      <picture class="case-media">
+        <source media="(max-width: 479px)" srcset="../../../media/optimized/ds-case/mobile/error-screen-template-1x.webp 1x, ../../../media/optimized/ds-case/mobile/error-screen-template-2x.webp 2x" width="390" height="505">
+        <img src="../../../media/optimized/ds-case/error-screen-template-1x.webp" srcset="../../../media/optimized/ds-case/error-screen-template-1x.webp 1x, ../../../media/optimized/ds-case/error-screen-template-2x.webp 2x" width="680" height="518" alt="Error screen template “Something went wrong” with General, Offline, and Technical variants" loading="lazy" decoding="async">
+      </picture>
+
+      <p>For a similar reason, we turned the app’s home screen into a component too. It often appears in product flows as an entry point, so it’s easier to update it in one place than to maintain dozens of separate copies.</p>
+      <p>This turned out to be another way to reduce inconsistencies in mockups without introducing extra rules that everyone has to remember.</p>
+
+      <h2 class="case-h">04&nbsp;/ Figma&nbsp;→ Development</h2>
+      <p>Bringing order to the design library was only half the job. Components also had to be available to <span class="nowrap">developers <img class="text-icon" src="../../../media/text-icons/icon_dev.svg" alt="" width="18" height="18">;</span> otherwise the move to the new UI would keep stalling.</p>
+      <p>We brought back <span class="nowrap">syncs <img class="text-icon" src="../../../media/text-icons/icon_zoom.svg" alt="" width="18" height="18"></span> with the frontend team every two weeks. We checked progress, discussed priorities, and decided which components could be picked up next.</p>
+      <picture class="case-media">
+        <source media="(max-width: 479px)" srcset="../../../media/optimized/ds-case/mobile/frontend-sync-calendar-1x.webp 1x, ../../../media/optimized/ds-case/mobile/frontend-sync-calendar-2x.webp 2x" width="390" height="258">
+        <img src="../../../media/optimized/ds-case/frontend-sync-calendar-1x.webp" srcset="../../../media/optimized/ds-case/frontend-sync-calendar-1x.webp 1x, ../../../media/optimized/ds-case/frontend-sync-calendar-2x.webp 2x" width="680" height="252" alt="Calendar: a Design x Frontend meeting between daily stand-ups" loading="lazy" decoding="async">
+      </picture>
+
+      <p>I also gathered DS tasks in <span class="nowrap">Jira <img class="text-icon" src="../../../media/text-icons/icon_jira.svg" alt="" width="18" height="18">,</span> so the team had a shared backlog and transparent implementation statuses.</p>
+      <p>In parallel, we started updating the web version of the UI kit, where developers can browse the available components and check how they behave.</p>
+      <p>We paid special attention to design <span class="nowrap">review <img class="text-icon" src="../../../media/text-icons/icon_review.svg" alt="" width="18" height="18">.</span> The process existed before, but small components were sometimes skipped: it seemed there was nothing to check in a simple button or icon.</p>
+      <picture class="case-media">
+        <source media="(max-width: 479px)" srcset="../../../media/optimized/ds-case/mobile/design-review-title-1x.webp 1x, ../../../media/optimized/ds-case/mobile/design-review-title-2x.webp 2x" width="390" height="505">
+        <img src="../../../media/optimized/ds-case/design-review-title-1x.webp" srcset="../../../media/optimized/ds-case/design-review-title-1x.webp 1x, ../../../media/optimized/ds-case/design-review-title-2x.webp 2x" width="680" height="252" alt="Design review: the Title chip in Figma and in Flutter with different spacing" loading="lazy" decoding="async">
+      </picture>
+
+      <p>In practice, these were exactly the details where mismatches with the mockups appeared—<span class="nowrap">text sizes <img class="text-icon" src="../../../media/text-icons/icon_text.svg" alt="" width="18" height="18">,</span> spacing, strokes, alignment. We agreed to hold a design review before merging every new component, so issues get fixed before release, not after.</p>
+
+      <h2 class="case-h">05&nbsp;/ There are never enough resources</h2>
+      <p>Even when components are ready both in Figma and in code, it doesn’t mean the whole product immediately switches to the new <span class="nowrap">UI <img class="text-icon" src="../../../media/text-icons/icon_cross.svg" alt="" width="18" height="18">.</span></p>
+      <p>The team didn’t have the resources to redo all the existing screens as a separate effort. So we kept the transition gradual: when working on a product task, developers update the related interface elements whenever possible.</p>
+      <picture class="case-media case-media--desktop-only">
+        <source media="(max-width: 479px)" srcset="../../../media/optimized/ds-case/mobile/enter-data-before-after-1x.webp 1x, ../../../media/optimized/ds-case/mobile/enter-data-before-after-2x.webp 2x" width="390" height="698">
+        <img src="../../../media/optimized/ds-case/enter-data-before-after-1x.webp" srcset="../../../media/optimized/ds-case/enter-data-before-after-1x.webp 1x, ../../../media/optimized/ds-case/enter-data-before-after-2x.webp 2x" width="680" height="520" alt="The Enter data screen before and after moving to the new components" loading="lazy" decoding="async">
+      </picture>
+      <!-- Мобайл (до 479 px): тот же экран Enter data — сравнение «до/после» (scripts/compare.js), граница посередине.
+           Слева — старый экран (enter-data-before), справа — новый. -->
+      <div class="case-media case-media--mobile-only compare" data-compare style="--media-h: 623; --media-h-mobile: 623; --compare-pos: 50%">
+        <img class="compare__img" src="../../../media/optimized/ds-case/mobile/enter-data-before-after-1x.webp" srcset="../../../media/optimized/ds-case/mobile/enter-data-before-after-1x.webp 1x, ../../../media/optimized/ds-case/mobile/enter-data-before-after-2x.webp 2x" width="390" height="698" alt="The Enter data screen after moving to the new components" loading="lazy" decoding="async">
+        <img class="compare__img compare__img--top" src="../../../media/optimized/ds-case/mobile/enter-data-before-1x.webp" srcset="../../../media/optimized/ds-case/mobile/enter-data-before-1x.webp 1x, ../../../media/optimized/ds-case/mobile/enter-data-before-2x.webp 2x" width="390" height="698" alt="The Enter data screen before the move" loading="lazy" decoding="async">
+        <div class="compare__handle" role="slider" tabindex="0" aria-label="Comparison: the Enter data screen before and after" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+          <span class="compare__knob" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M9 7l-4 5 4 5M15 7l4 5-4 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+      </div>
+
+      <p>This is where the ready-made UI <span class="nowrap">kit <img class="text-icon" src="../../../media/text-icons/icon_kit.svg" alt="" width="18" height="18"></span> helps. Instead of implementing an updated component from scratch each time, developers can take it from the shared library.</p>
+      <p>This way, the new DS gradually makes its way into the app without a separate large migration project.</p>
+
+      <h2 class="case-h">Results</h2>
+      <p>The design team has fully switched to the new library. It covers the core use cases, and <span class="nowrap">components <img class="text-icon" src="../../../media/text-icons/icon_components.svg" alt="" width="18" height="18"></span> have become more flexible thanks to new variants, states, and slots.</p>
+      <p>There’s less detach in product flows. Templates for recurring pages helped remove visual inconsistencies between identical states.</p>
+      <picture class="case-media">
+        <source media="(max-width: 479px)" srcset="../../../media/optimized/ds-case/mobile/result-figma-jira-flutter-1x.webp 1x, ../../../media/optimized/ds-case/mobile/result-figma-jira-flutter-2x.webp 2x" width="390" height="258">
+        <img src="../../../media/optimized/ds-case/result-figma-jira-flutter-1x.webp" srcset="../../../media/optimized/ds-case/result-figma-jira-flutter-1x.webp 1x, ../../../media/optimized/ds-case/result-figma-jira-flutter-2x.webp 2x" width="680" height="252" alt="Figma, Jira, and Flutter with ready checkmarks" loading="lazy" decoding="async">
+      </picture>
+
+      <p>About 90% of the Figma components are already available in the developers’ shared UI kit. This doesn’t mean the whole app interface has been updated: the move to the new UI in production is still ongoing.</p>
+      <p>Both teams now have clear readiness statuses, a shared <span class="nowrap">backlog <img class="text-icon" src="../../../media/text-icons/icon_jira.svg" alt="" width="18" height="18">,</span> and a regular <span class="nowrap">sync <img class="text-icon" src="../../../media/text-icons/icon_sync.svg" alt="" width="18" height="18"></span> process. And design review helps keep small visual bugs out of production.</p>
+
+      <h2 class="case-h">Conclusion</h2>
+      <p>The design system is still evolving. We still need to expand the documentation and keep updating the app. But now it’s a working system the team can rely on—not yet another place where you constantly have to figure out what’s ready, what to use, and where to find the right component.</p>
+    </article>
+  </main>
+
+  <!-- Нижнее меню сайта (fixed). Кейс Design System. CV пока без ссылки. -->
+  <!-- MVP (2026-10-26): Playground, CV-текстом, пилюля Telegram с иконкой и кнопка «Ещё» скрыты атрибутом hidden (data-mvp-hidden), не удалены — вернёмся к ним позже. Меню на всех ширинах: «Кейсы · Telegram» + пилюля CV с иконкой «скачать». -->
+  <nav class="site-menu" aria-label="Site menu">
+    <ul class="site-menu__group glass-button" data-glass-adapt>
+      <li><a class="site-menu__item" href="../../#cases">Cases</a></li>
+      <li class="site-menu__desktop" hidden data-mvp-hidden><a class="site-menu__item">Playground</a></li>
+      <li class="site-menu__desktop" hidden data-mvp-hidden><a class="site-menu__item" href="../../../media/cv/darya-lugovaya-cv-en.pdf" target="_blank" rel="noopener noreferrer">CV</a></li>
+      <li><a class="site-menu__item" href="https://t.me/lugovayadarya" target="_blank" rel="noopener noreferrer">Telegram</a></li>
+    </ul>
+    <a hidden data-mvp-hidden class="site-menu__group site-menu__group--pill site-menu__item site-menu__desktop glass-button" data-glass-adapt href="https://t.me/lugovayadarya" target="_blank" rel="noopener noreferrer">
+      <img src="../../../media/icons/24_icon_telegram_stroke.svg" alt="" width="20" height="20">Telegram
+    </a>
+    <a class="site-menu__group site-menu__group--pill site-menu__item site-menu__cv-pill glass-button" data-glass-adapt href="../../../media/cv/darya-lugovaya-cv-en.pdf" target="_blank" rel="noopener noreferrer">
+      <img src="../../../media/icons/20_icon_download_stroke.svg" alt="" width="20" height="20">CV
+    </a>
+    <button hidden data-mvp-hidden class="site-menu__more site-menu__mobile glass-button" data-glass-adapt type="button" aria-label="More">
+      <img src="../../../media/icons/24_hamburger_icon.svg" alt="" width="24" height="24">
+    </button>
+  </nav>
+</body>
+</html>
